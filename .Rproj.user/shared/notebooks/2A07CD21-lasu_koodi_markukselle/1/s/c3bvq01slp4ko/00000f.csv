@@ -1,0 +1,28 @@
+"0","
+all <- rename(dsw.d,  
+                  ohc_age = ""ohc"",
+                  child_n_age = ""childr0018_n"")
+
+all$age.group <- ""Ages 0 - 17""       
+all$a.group <- ""All""  
+
+preteen <- rename(dsw.d,  
+                  ohc_age = ""ohc0012"",
+                  child_n_age = ""childr0012_n"")
+
+preteen$age.group <- ""Ages 0 - 12""          
+preteen$a.group <- ""By age group""  
+
+
+teen <- rename(dsw.d,  
+               ohc_age = ""ohc1317"",
+               child_n_age = ""childr1317_n"")
+
+teen$age.group <- ""Ages 13 - 17""              
+teen$a.group <- ""By age group""
+
+teens <-  rbind(teen,preteen, all)
+"
+"2","Error in match.names(clabs, names(xi)) : 
+  names do not match previous names
+"

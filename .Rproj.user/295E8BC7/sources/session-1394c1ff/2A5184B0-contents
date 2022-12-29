@@ -1,0 +1,48 @@
+library(magrittr) #
+library(tidyverse) #
+#library(hrbrthemes)
+#library(viridis)
+library(datawizard)
+#library(haven)
+library(ggplot2)
+#library(lmtest)
+#library(Rcpp)
+library(geomtextpath)
+library(sotkanet)
+library(Hmisc)
+library(dplyr)
+library(janitor)
+#library(naniar)
+library(sandwich)
+library(lmtest)
+library(modelsummary)
+library(estimatr)
+library(lme4)
+library(sjlabelled)
+#library(VIM)
+library("modelr")
+library(robustlmm)
+library(gganimate)
+#library(gifski)
+library(readr)
+library(tidyr)
+library(transformr)
+library(robustlmm)
+library("readxl")
+library(ggpubr)
+
+#clearing memory
+rm(list=ls())
+
+library(quarto)
+setwd("C:/Users/AapoHiilamo/OneDrive - Itsenäisyyden juhlavuoden lastensäätiö sr/Tiedostot/Lastensuojelu ja köyhyys/research_paper_ohc")
+
+
+source("./scripts/00_data_import.R")
+source("./scripts/01_sample_selection.R")
+source("./scripts/02_imputation_variable_coding.R")
+source("./scripts/03_changes_ohc.R")
+
+quarto_render("./quarto/04_figures.qmd")
+quarto_render("./quarto/05_regressions.qmd")
+

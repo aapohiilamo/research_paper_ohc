@@ -1,0 +1,194 @@
+"0","#| echo: false"
+"0","#| output: false"
+"0","library(magrittr)"
+"0","library(tidyverse)"
+"2","Registered S3 methods overwritten by 'dbplyr':
+  method         from
+  print.tbl_lazy     
+  print.tbl_sql      
+"
+"2","── [1mAttaching packages[22m ──────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.3.2 ──"
+"2","[32m✔[39m [34mggplot2[39m 3.3.6      [32m✔[39m [34mpurrr  [39m 0.3.4 
+[32m✔[39m [34mtibble [39m 3.1.8      [32m✔[39m [34mdplyr  [39m 1.0.10
+[32m✔[39m [34mtidyr  [39m 1.2.1      [32m✔[39m [34mstringr[39m 1.4.1 
+[32m✔[39m [34mreadr  [39m 2.1.2      [32m✔[39m [34mforcats[39m 0.5.2 "
+"2","── [1mConflicts[22m ─────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+[31m✖[39m [34mtidyr[39m::[32mextract()[39m   masks [34mmagrittr[39m::extract()
+[31m✖[39m [34mdplyr[39m::[32mfilter()[39m    masks [34mstats[39m::filter()
+[31m✖[39m [34mdplyr[39m::[32mlag()[39m       masks [34mstats[39m::lag()
+[31m✖[39m [34mpurrr[39m::[32mset_names()[39m masks [34mmagrittr[39m::set_names()"
+"0","library(hrbrthemes)"
+"2","Registered S3 methods overwritten by 'htmltools':
+  method               from         
+  print.html           tools:rstudio
+  print.shiny.tag      tools:rstudio
+  print.shiny.tag.list tools:rstudio
+"
+"2","Registering Windows fonts with R
+"
+"2","NOTE: Either Arial Narrow or Roboto Condensed fonts are required to use these themes.
+"
+"2","      Please use hrbrthemes::import_roboto_condensed() to install Roboto Condensed and
+"
+"2","      if Arial Narrow is not on your system, please see https://bit.ly/arialnarrow
+"
+"0","library(viridis)"
+"2","Loading required package: viridisLite
+"
+"0","library(datawizard)"
+"0","library(haven)"
+"0","library(ggplot2)"
+"0","library(lmtest)"
+"2","Loading required package: zoo
+"
+"2","
+Attaching package: ‘zoo’
+
+"
+"2","The following objects are masked from ‘package:base’:
+
+    as.Date, as.Date.numeric
+
+"
+"0","library(Rcpp)"
+"0","library(lmtest)"
+"0","library(geomtextpath)"
+"0","library(sotkanet)"
+"0","library(Hmisc)"
+"2","Loading required package: lattice
+"
+"2","Loading required package: survival
+"
+"2","Loading required package: Formula
+"
+"2","Registered S3 method overwritten by 'htmlwidgets':
+  method           from         
+  print.htmlwidget tools:rstudio
+"
+"2","Registered S3 method overwritten by 'data.table':
+  method           from
+  print.data.table     
+"
+"2","
+Attaching package: ‘Hmisc’
+
+"
+"2","The following objects are masked from ‘package:dplyr’:
+
+    src, summarize
+
+"
+"2","The following objects are masked from ‘package:base’:
+
+    format.pval, units
+
+"
+"0","library(dplyr)"
+"0","library(janitor)"
+"2","
+Attaching package: ‘janitor’
+
+"
+"2","The following objects are masked from ‘package:datawizard’:
+
+    remove_empty, remove_empty_rows
+
+"
+"2","The following objects are masked from ‘package:stats’:
+
+    chisq.test, fisher.test
+
+"
+"0","library(naniar)"
+"0","library(sandwich)"
+"0","library(lmtest)"
+"0","library(modelsummary)"
+"2","
+Attaching package: ‘modelsummary’
+
+"
+"2","The following object is masked from ‘package:Hmisc’:
+
+    Mean
+
+"
+"0","library(estimatr)"
+"0","library(lme4)"
+"2","Loading required package: Matrix
+"
+"2","
+Attaching package: ‘Matrix’
+
+"
+"2","The following objects are masked from ‘package:tidyr’:
+
+    expand, pack, unpack
+
+"
+"0","library(sjlabelled)"
+"2","
+Attaching package: ‘sjlabelled’
+
+"
+"2","The following objects are masked from ‘package:haven’:
+
+    as_factor, read_sas, read_spss, read_stata, write_sas, zap_labels
+
+"
+"2","The following objects are masked from ‘package:datawizard’:
+
+    to_factor, to_numeric
+
+"
+"2","The following object is masked from ‘package:forcats’:
+
+    as_factor
+
+"
+"2","The following object is masked from ‘package:dplyr’:
+
+    as_label
+
+"
+"2","The following object is masked from ‘package:ggplot2’:
+
+    as_label
+
+"
+"0","library(VIM)"
+"2","Loading required package: colorspace
+"
+"2","Loading required package: grid
+"
+"2","VIM is ready to use.
+
+"
+"2","Suggestions and bug-reports can be submitted at: https://github.com/statistikat/VIM/issues
+"
+"2","
+Attaching package: ‘VIM’
+
+"
+"2","The following object is masked from ‘package:datasets’:
+
+    sleep
+
+"
+"0","library(""modelr"")"
+"0","library(robustlmm)"
+"0","library(gganimate)"
+"0","library(ggplot2)"
+"0",""
+"0","library(gifski)"
+"0","library(readr)"
+"0","library(tidyr)"
+"0","library(transformr)"
+"0","library(robustlmm)"
+"0","library(""readxl"")"
+"0","library(ggpubr)"
+"2","Warning: package ‘ggpubr’ was built under R version 4.2.2"
+"0","#clearing memory"
+"0","rm(list=ls())"
+"0",""
+"0","                        "
+"0",""

@@ -1,0 +1,361 @@
+hammashoito_metadata <- SotkanetIndicatorMetadata(id = 1075)
+library(sotkanet)
+hammashoito_metadata <- SotkanetIndicatorMetadata(id = 1075)
+View(hammashoito_metadata)
+hammashoito_metadata
+View(hammashoito_metadata)
+wanted_variables <- c(228, 181, 1065, 423, 179, 5097)
+hammashoito_metadata <- SotkanetIndicatorMetadata(id = wanted_variables)
+View(hammashoito_metadata)
+hammashoito_metadata
+#| echo: false
+#| output: false
+library(magrittr)
+library(tidyverse)
+library(hrbrthemes)
+library(viridis)
+library(datawizard)
+library(haven)
+library(ggplot2)
+library(lmtest)
+library(Rcpp)
+library(lmtest)
+library(geomtextpath)
+library(sotkanet)
+library(Hmisc)
+library(dplyr)
+library(janitor)
+library(naniar)
+library(sandwich)
+library(lmtest)
+library(modelsummary)
+library(estimatr)
+library(lme4)
+library(sjlabelled)
+library(VIM)
+library("modelr")
+library(robustlmm)
+library(gganimate)
+library(ggplot2)
+library(gifski)
+library(readr)
+library(tidyr)
+library(transformr)
+library(robustlmm)
+library("readxl")
+library(ggpubr)
+#clearing memory
+rm(list=ls())
+#| echo: true
+#| output: false
+#| eval: true
+# 1 Loading data on municipalities with zero out-of-home cases
+# xlsx files
+municipalities_with_zeros <- read_excel("C:/Users/AapoHiilamo/OneDrive - Itsenäisyyden juhlavuoden lastensäätiö sr/tiedostot/Lastensuojelu ja köyhyys/kunnat joissa ei sijoituksia 1992_2020_valmis.xlsx")
+municipalities_with_zeros  %<>%
+pivot_longer(!c(Kuntakoodi, Kunta),
+names_to = "year",
+values_to = "ohc_n_zero")  %>%
+filter(ohc_n_zero == "0") %>%
+rename(region_code = "Kuntakoodi",
+region.name = "Kunta") %>%
+mutate(year = as.numeric(year))
+# 2 Loading data directly from sotkanet
+#selecting variables
+wanted_variables <- c(181, 1065, 423, 179, 5097)
+#importing datasets - first only control variables. These are downloaded separately because they are not sex specific.
+#note that absolute value is usually number of people/families. Primary value is usually percentage. Here we take the absolute number because they are more accurate.
+dsw.controls <- GetDataSotkanet(indicators = wanted_variables,
+genders = c("total"),
+years = 1990:2021) %>%
+mutate(wanted_value =
+case_when(indicator == 181 ~ as.numeric(primary.value),
+TRUE ~ as.numeric(absolute.value)))  %>%
+pivot_wider(id_cols = c(region, year, region.title.fi,region.category),
+names_from = c(indicator.title.fi, indicator),
+values_from = wanted_value)  %>%
+rename(total_chld_n = ends_with("1065"))
+#take the sex specific figures
+wanted_variables <- c( 1065, 191, 5495, 5496, 5497, 1064, 7, 552:570, 3563, 1066)
+#importing datasets
+dsw.main <- GetDataSotkanet(indicators = wanted_variables,
+genders = c("total", "female", "male"),
+years = 1990:2021) %>%
+mutate(wanted_value =
+case_when(indicator %in% c(552:570) ~ as.numeric(primary.value),
+TRUE ~ as.numeric(absolute.value)))  %>%
+pivot_wider(id_cols = c(region, year, region.title.fi,region.category, gender),
+names_from = c(indicator.title.fi, indicator),
+values_from = wanted_value)
+#merging the two datasets - gender specific and general
+dsw <- merge(dsw.controls,
+dsw.main,by=c("region","year"),
+sort=T,
+all.y = T,
+all.x = T)
+#We then labeling the data - we take variable names and place them as variable labels
+var.labels <- colnames(dsw)
+dsw <- set_label(dsw, label = var.labels)
+ls(dsw)
+#data wrangling - making more informative variable names
+dsw <-
+rename(dsw,
+unemp = ends_with("181"),
+childr_n = ends_with("1065"),
+childr0018_n = ends_with("1066"),
+sa_n = ends_with("423"),
+famil_n = ends_with("179"),
+ohc_n = ends_with("191"),
+ohc0006_n = ends_with("5495"),
+ohc1317_n = ends_with("5496"),
+ohc0712_n = ends_with("5497"),
+childr0_n = "0-vuotiaat, lkm 31.12._552",
+childr1_n = "1-vuotiaat, lkm 31.12._553",
+childr2_n = "2-vuotiaat, lkm 31.12._554",
+childr3_n = "3-vuotiaat, lkm 31.12._555",
+childr4_n = "4-vuotiaat, lkm 31.12._556",
+childr5_n = "5-vuotiaat, lkm 31.12._557",
+childr6_n = "6-vuotiaat, lkm 31.12._558",
+childr7_n = "7-vuotiaat, lkm 31.12._559",
+childr8_n = "8-vuotiaat, lkm 31.12._560",
+childr9_n = "9-vuotiaat, lkm 31.12._561",
+childr10_n = "10-vuotiaat, lkm 31.12._562",
+childr11_n = "11-vuotiaat, lkm 31.12._563",
+childr12_n = "12-vuotiaat, lkm 31.12._564",
+childr13_n = "13-vuotiaat, lkm 31.12._565",
+childr14_n = "14-vuotiaat, lkm 31.12._566",
+childr15_n = "15-vuotiaat, lkm 31.12._567",
+childr16_n = "16-vuotiaat, lkm 31.12._568",
+childr17_n = "17-vuotiaat, lkm 31.12._569",
+childr18_n = "18-vuotiaat, lkm 31.12._570",
+region.name = "region.title.fi.x",
+region.class = "region.category.x",
+ohc_0024n = ends_with("3563") )
+#merging dataset with the zeros
+dsw <- merge(dsw,
+municipalities_with_zeros,
+by=c("region.name","year"),
+sort=T,
+all.y = T,
+all.x = T)
+#recoding variables when there are no out-of-home cases in the municipality
+dsw %<>%
+ungroup()  %>%
+mutate(ohc_n = case_when(ohc_n_zero == "0" ~ as.numeric(ohc_n_zero),
+TRUE ~ ohc_n),
+ohc0006_n = case_when(ohc_n_zero == "0" ~ as.numeric(ohc_n_zero),
+TRUE ~ ohc0006_n ),
+ohc0712_n = case_when(ohc_n_zero == "0" ~ as.numeric(ohc_n_zero),
+TRUE ~ ohc0712_n ),
+ohc1317_n = case_when(ohc_n_zero == "0" ~ as.numeric(ohc_n_zero),
+TRUE ~ ohc1317_n ))
+save(dsw, file = "data_full.RData")
+#| echo: true
+#| output: true
+rm(list=ls())
+load("data_full.RData")
+municipalities_total <-
+filter(dsw, region.class == "KUNTA" & gender == "total")
+#how many deletations?
+before_deletation_regions <- length(unique(municipalities_total$region))
+cat("Number of municipalities before any deletations: ", before_deletation_regions)
+length(unique(municipalities_total$region))
+observations <-nrow(municipalities_total)
+cat("Number of observations before any deletations: ", nrow(municipalities_total))
+dsw <- filter(dsw,  year %in% (1992:2021))
+municipalities_total <-
+filter(dsw, region.class == "KUNTA" & gender == "total")
+before_deletation_regions <- length(unique(municipalities_total$region))
+observations <- nrow(municipalities_total)
+cat("Number of municipalities in 1992- 2021: ", before_deletation_regions)
+cat("Number of observations in 1992- 2021: ", observations)
+dsw <- filter(dsw, total_chld_n > 1000 |  region.class != "KUNTA")
+municipalities_total <-
+filter(dsw, region.class == "KUNTA" & gender == "total")
+before_deletation_regions <- length(unique(municipalities_total$region))
+observations <- nrow(municipalities_total)
+cat("Number of municipalities in 1992- 2021 with more than 1000 children : ", before_deletation_regions)
+cat("Number of observations in 1992- 2021 with more than 1000 children: ", observations)
+dsw <- filter(dsw, !is.na(sa_n))
+municipalities_total <-
+filter(dsw, region.class == "KUNTA" & gender == "total")
+before_deletation_regions <- length(unique(municipalities_total$region))
+observations <- nrow(municipalities_total)
+cat("Number of municipalities in 1992- 2021 with more than 1000 children & no missing SA data: ", before_deletation_regions)
+cat("Number of observations in 1992- 2021 with more than 1000 children & no missing SA data: ", observations)
+#5.  How many after excluding if all years OHC is missing
+dsw %<>%                                    # Count NA by group
+group_by(region) %>%
+dplyr::mutate(count_na = sum(!is.na(ohc_n)))
+dsw <- filter(dsw, count_na != 0)
+municipalities_total <-
+filter(dsw, region.class == "KUNTA" & gender == "total")
+before_deletation_regions <- length(unique(municipalities_total$region))
+observations <- nrow(municipalities_total)
+cat("Number of municipalities in 1992- 2021 with more than 1000 children & no missing SA data & at least one valid OHC data point: ", before_deletation_regions)
+cat("Number of observations in 1992- 2021 with more than 1000 children & no missing SA data & see above: ", observations)
+#| echo: true
+#| output: true
+#Fourth exclusion only imputed ohc data
+dsw %<>%
+drop_na(year, region, childr_n,  sa_n)
+dsw <- filter(dsw, count_na != 0)
+municipalities_total <-
+filter(dsw, region.class == "KUNTA" & gender == "total")
+length(unique(municipalities_total$region))
+nrow(municipalities_total)
+save(dsw, file = "data_included.RData")
+#| echo: true
+#| output: false
+#What share of observations are ohc missing (ie will be imputed)
+100*nrow(filter(municipalities_total, is.na(ohc_n)))/nrow(municipalities_total)
+# linear model for imputations - all ohc
+liner_model<-lm(ohc_n~ factor(year) +
+childr_n +
+factor(region) +
+factor(gender) +
+sa_n +
+factor(year):sa_n,
+data = dsw)
+summary(liner_model)$r.squared
+dsw <- dsw %>%
+add_predictions(liner_model)
+dsw <- dsw %>%
+ungroup()  %>%
+mutate(pred_all = case_when(!is.na(ohc_n) ~ ohc_n, pred>4 ~ 4, pred<0 ~ 1, TRUE ~ round(pred, digits = 0) ) )
+# linear model for imputations - 0 -6 ages ohc - note that here the previous prediction is used as predictor
+liner_model<-lm(ohc0006_n~ factor(year) +
+childr_n +
+pred_all +
+sa_n +
+factor(year):sa_n,
+data = dsw)
+dsw %<>%
+add_predictions(liner_model, var = "pred2") %>%
+mutate(pred_0006 = case_when(pred2>4 ~ 4,
+pred2<0 ~ 1,
+TRUE ~ round(pred2, digits = 0) ) )
+# linear model for imputations - 7- 12 ages ohc
+liner_model<-lm(ohc0712_n~ factor(year) +
+childr_n +
+pred_all +
+sa_n +
+factor(year):sa_n,
+data = dsw)
+dsw %<>%
+add_predictions(liner_model, var = "pred3") %>%
+ungroup()  %>%
+mutate(pred_0712 = case_when(pred3>4 ~ 4,
+pred3<0 ~ 1,
+TRUE ~ round(pred2, digits = 0) ) )
+# linear model for imputations - 13-17 ages ohc
+liner_model<-lm(ohc1317_n~ factor(year) +
+childr_n +
+pred_all +
+sa_n +
+factor(year):sa_n,
+data = dsw)
+dsw %<>%
+add_predictions(liner_model, var = "pred4") %>%
+ungroup()  %>%
+mutate(pred_1317 = case_when(pred4>4 ~ 4,
+pred4<0 ~ 1,
+TRUE ~ round(pred4, digits = 0) ) )
+# putting the imputations in place and some data wrangling
+dsw %<>%  ungroup()  %>% mutate(
+ohc_n = case_when(is.na(ohc_n) ~ pred_all, TRUE ~ ohc_n ),
+ohc0006_n = case_when(is.na(ohc0006_n)  ~ pred_0006, TRUE ~ ohc0006_n),
+ohc0712_n = case_when(is.na(ohc0712_n)  ~ pred_0712, TRUE ~ ohc0712_n),
+ohc1317_n = case_when(is.na(ohc1317_n)  ~ pred_1317, TRUE ~ ohc1317_n),
+year = as.integer(year) ) %>%
+mutate(               poverty = ( sa_n / famil_n ) * 100,
+ohc = (ohc_n / childr0018_n) * 1000,
+childr0012_n = rowSums(.[22:34]),
+childr1317_n = rowSums(.[35:40]))    %>%
+mutate(   ohc0012 = ( ( ohc0006_n + ohc0712_n )  /  childr0012_n ) * 1000,
+ohc1317 = ( ohc1317_n / childr1317_n ) * 1000 )
+dsw.d <- dsw %>%
+drop_na(poverty, ohc_n)
+# selecting key variables
+dsw.d %<>% select(poverty, ohc_n, ohc0012, ohc1317, poverty, ohc, unemp,
+region.class,gender, region, year, region.name, childr0018_n, childr0012_n, childr1317_n, total_chld_n, childr_n )
+save(dsw.d, file = "data_imputed.RData")
+#| echo: true
+municipalities_total <-
+filter(dsw.d, region.class == "KUNTA" & gender == "total")
+length(unique(municipalities_total$region))
+#| echo: true
+#| output: true
+municipalities_total <-
+filter(dsw.d, region.class == "KUNTA" & gender == "total")
+koko_maa21 <-   filter(dsw.d, region.class == "MAA" & gender == "total" & year== "2021")
+koko_maa92 <-   filter(dsw.d, region.class == "MAA" & gender == "total" & year== "1992")
+increase_preteen<-koko_maa21$ohc0012/koko_maa92$ohc0012
+cat("Increase from 1992 to 2021 in OHC in preteenagers: ", increase_preteen)
+increase_teen<-koko_maa21$ohc1317/koko_maa92$ohc1317
+cat("Increase from 1992 to 2021 in OHC in preteenagers: ", increase_teen)
+increase<-koko_maa21$ohc/koko_maa92$ohc
+cat("Increase from 1992 to 2021 in OHC in all: ", increase)
+koko_maa21 <-   filter(dsw.d, region.class == "MAA" & gender == "female" & year== "2021")
+koko_maa92 <-   filter(dsw.d, region.class == "MAA" & gender == "female" & year== "1992")
+increase_female<-(koko_maa21$ohc/koko_maa92$ohc)*100
+cat("Increase from 1992 to 2021 in OHC in wqomen: ", increase_female)
+koko_maa21 <-   filter(dsw.d, region.class == "MAA" & gender == "male" & year== "2021")
+koko_maa92 <-   filter(dsw.d, region.class == "MAA" & gender == "male" & year== "1992")
+increase_male<-(koko_maa21$ohc/koko_maa92$ohc)*100
+cat("Increase from 1992 to 2021 in OHC in wqomen: ", increase_male)
+#| echo: true
+#| output: true
+koko_maa21 <-   filter(dsw.d, region.class == "KUNTA" & gender == "total" & year== "2021")
+koko_maa92 <-   filter(dsw.d, region.class == "KUNTA" & gender == "total" & year== "1992")
+summary(lm(ohc*10 ~ poverty, data = koko_maa92))
+#| echo: true
+#| output: true
+#|
+summary(lm(ohc*10 ~ poverty, data = koko_maa21))
+all <- rename(dsw.d,
+ohc_age = "ohc",
+child_n_age = "childr0018_n")
+all$age.group <- "Ages 0 - 17"
+all$a.group <- "All"
+preteen <- rename(dsw.d,
+ohc_age = "ohc0012",
+child_n_age = "childr0012_n")
+preteen$age.group <- "Ages 0 - 12"
+preteen$a.group <- "By age group"
+teen <- rename(dsw.d,
+ohc_age = "ohc1317",
+child_n_age = "childr1317_n")
+teen$age.group <- "Ages 13 - 17"
+teen$a.group <- "By age group"
+teens <-  rbind(teen,preteen, all)
+all <- c("ohc", "year", "region","gender", "region.class", "poverty" , "childr0018_n", "unemp")
+all <- dsw.d[all]
+all <- rename(all,
+ohc_age = "ohc",
+child_n_age = "childr0018_n")
+all$age.group <- "Ages 0 - 17"
+all$a.group <- "All"
+preteen <- c("ohc0012", "year", "region","gender", "region.class", "poverty" , "childr0012_n", "unemp")
+preteen <- dsw.d[preteen]
+preteen <- rename(preteen,
+ohc_age = "ohc0012",
+child_n_age = "childr0012_n")
+preteen$age.group <- "Ages 0 - 12"
+preteen$a.group <- "By age group"
+teen <- c("ohc1317", "year", "region" , "gender", "region.class", "poverty" , "childr1317_n", "unemp")
+teen <- dsw.d[teen]
+teen <- rename(teen,  ohc_age = "ohc1317",
+child_n_age = "childr1317_n")
+teen$age.group <- "Ages 13 - 17"
+teen$a.group <- "By age group"
+teens <-  rbind(teen,preteen, all)
+summary(lm(ohc*10 ~ poverty, data = koko_maa21))
+summary(lm(ohc*10 ~ poverty, data = koko_maa21))
+testi<-summary(lm(ohc*10 ~ poverty, data = koko_maa21))
+View(testi)
+testi$coefficients["poverty", "Estimate"]
+coef_21<-summary(lm(ohc*10 ~ poverty, data = koko_maa21))$coefficients["poverty", "Estimate"]
+library(quarto)
+install.packages("rmarkdown")
+library(quarto)

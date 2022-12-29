@@ -1,0 +1,7 @@
+library(sotkanet)
+
+wanted_variables <- c(228, 181, 1065, 423, 179, 5097)
+wanted_variables <- c( 1065, 191, 5495, 5496, 5497, 1064, 7, 552:570, 3563, 1066)
+
+hammashoito_metadata <- SotkanetIndicatorMetadata(id = wanted_variables)
+hammashoito_metadata
