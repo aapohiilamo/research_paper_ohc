@@ -18,8 +18,6 @@ library(quarto)
 library(here)
 ################################################################################
 
-#clearing memory
-rm(list=ls())
 
 source(here("scripts", "00_data_import.R"))  #internet connection required
 source(here("scripts", "01_sample_selection.R"))
