@@ -1,3 +1,6 @@
+library(tidyverse)
+library(magrittr)
+
 rm(list=ls())
 load(here("data", "raw", "data_full.RData"))
 municipalities_total <-   

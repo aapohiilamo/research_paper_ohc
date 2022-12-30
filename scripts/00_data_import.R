@@ -1,5 +1,10 @@
+library(sotkanet)
+library(tidyverse)
+library(magrittr)
+library(readxl)
+library(sjlabelled)
+
 municipalities_with_zeros <- read_excel(here("data", "raw", "kunnat joissa ei sijoituksia 1992_2020_valmis.xlsx"))
-                                        
 
 municipalities_with_zeros  %<>% 
   pivot_longer(!c(Kuntakoodi, Kunta), 

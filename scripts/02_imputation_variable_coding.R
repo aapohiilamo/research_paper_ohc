@@ -1,3 +1,8 @@
+library(lme4)
+library(tidyverse)
+library(magrittr)
+library(modelr)
+
 rm(list=ls())
 load(here("data", "processed", "data_included.RData"))
 
@@ -104,8 +109,7 @@ length(unique(municipalities_total$region))
 save(dsw.d, file = here("data", "processed", "data_imputed.RData"))
 
 
-
-
+#creating different dataset with age_group specific figures
 all <- c("ohc", "year", "region","gender", "region.class", "poverty" , "childr0018_n", "unemp")
 all <- dsw.d[all]
 

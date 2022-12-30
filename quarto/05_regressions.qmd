@@ -6,41 +6,14 @@ code-fold: true
 always_allow_html: true
 ---
 
-
 ```{r}
 #| echo: false
 #| output: false
 library(magrittr) #
 library(tidyverse) #
-#library(hrbrthemes)
-#library(viridis)
-library(datawizard)
-#library(haven)
-library(ggplot2)
-#library(lmtest)
-#library(Rcpp)
-library(geomtextpath)
-library(sotkanet)
-library(Hmisc)
-library(dplyr)
-library(janitor)
-#library(naniar)
-library(sandwich)
-library(lmtest)
 library(modelsummary)
 library(estimatr)
 library(lme4)
-library(sjlabelled)
-#library(VIM)
-library("modelr")
-library(robustlmm)
-library(gganimate)
-#library(gifski)
-library(readr)
-library(tidyr)
-library(transformr)
-library(robustlmm)
-library("readxl")
 library(ggpubr)
 library(here)
 
