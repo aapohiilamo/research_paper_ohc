@@ -51,26 +51,15 @@ lmrobust <- function(dataset) {
   lm_robust(ohc ~ poverty + unemp + factor(year), clusters = region, data = dataset)
 }
 
-within_between <- function(data) {
-  dsw.d.wb <- cbind(data,
-  datawizard::demean(data, select = c("poverty",  "unemp"),
-                     group = "region"))
- lmer(ohc ~ poverty_within +  
-         poverty_between + 
-         unemp_within+
-         unemp_between +
-         factor(year)+ 
-         (1 | region),  
-       data =  dsw.d.wb )
-}
 
-within_between <- function(dataset) {
+
+within <- function(dataset) {
   lm_robust(ohc ~ poverty + unemp + factor(year), clusters = region, data = dataset, fixed_effects = ~ region)
 
 }
 
 results1 <- purrr::map(datasets,lmrobust)
-results2 <- purrr::map(datasets,within_between)
+results2 <- purrr::map(datasets,within)
 
 results <-c(results1,results2)
 modelsummary(
@@ -110,7 +99,7 @@ datasets <- list(all.years,
 
 
 results1 <- purrr::map(datasets,lmrobust)
-results2 <- purrr::map(datasets,within_between)
+results2 <- purrr::map(datasets,within)
 
 results <-c(results1,results2)
 modelsummary(
@@ -152,7 +141,7 @@ datasets <- list(all.years,
 
 
 results1 <- purrr::map(datasets,lmrobust)
-results2 <- purrr::map(datasets,within_between)
+results2 <- purrr::map(datasets,within)
 
 results <-c(results1,results2)
 modelsummary(
@@ -188,7 +177,7 @@ datasets <- list(all.years,
 
 
 results1 <- purrr::map(datasets,lmrobust)
-results2 <- purrr::map(datasets,within_between)
+results2 <- purrr::map(datasets,within)
 
 results <-c(results1,results2)
 modelsummary(
@@ -225,7 +214,7 @@ datasets <- list(all.years,
 
 
 results1 <- purrr::map(datasets,lmrobust)
-results2 <- purrr::map(datasets,within_between)
+results2 <- purrr::map(datasets,within)
 
 results <-c(results1,results2)
 modelsummary(
@@ -258,7 +247,7 @@ datasets <- list(all.years,
 
 
 results1 <- purrr::map(datasets,lmrobust)
-results2 <- purrr::map(datasets,within_between)
+results2 <- purrr::map(datasets,within)
 
 results <-c(results1,results2)
 modelsummary(

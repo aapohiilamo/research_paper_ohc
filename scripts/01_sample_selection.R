@@ -50,7 +50,8 @@ cat("Number of observations in 1992- 2021 with more than 1000 children & no miss
 
 dsw %<>%                                    # Count NA by group
   group_by(region) %>%
-  dplyr::mutate(count_na = sum(!is.na(ohc_n)))
+  dplyr::mutate(count_na = sum(!is.na(ohc_n))) %>%
+  ungroup()
 dsw <- filter(dsw, count_na != 0)
 municipalities_total <-   
   filter(dsw, region.class == "KUNTA" & gender == "total")
