@@ -3,9 +3,8 @@ library(tidyverse)
 library(magrittr)
 library(modelr)
 
-rm(list=ls())
-load(here("data", "processed", "data_included.RData"))
-
+#load(here("data", "processed", "data_included.RData"))
+dsw <- readRDS(here("data", "processed", "data_included.rds"))
 municipalities_total <-   
   filter(dsw, region.class == "KUNTA" & gender == "total")
 length(unique(municipalities_total$region))
@@ -112,7 +111,7 @@ municipalities_total <-
   filter(dsw.d, region.class == "KUNTA" & gender == "total")
 
 length(unique(municipalities_total$region))
-save(dsw.d, file = here("data", "processed", "data_imputed.RData"))
+saveRDS(dsw.d, file = here("data", "processed", "data_imputed.rds"))
 
 
 #creating different dataset with age_group specific figures
@@ -147,4 +146,4 @@ teen$age.group <- "Ages 13 - 17"
 teen$a.group <- "By age group"  
 teens <-  rbind(teen,preteen, all)
 
-save(teens, file = here("data", "processed", "data_imputed_teens.RData"))
+saveRDS(teens, file = here("data", "processed", "data_imputed_teens.rds"))

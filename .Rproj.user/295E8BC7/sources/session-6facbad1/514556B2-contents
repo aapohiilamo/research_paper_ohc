@@ -1,8 +1,7 @@
 library(tidyverse)
 library(magrittr)
 
-rm(list=ls())
-load(here("data", "raw", "data_full.RData"))
+dsw <- readRDS(here("data", "raw", "data_full.rds"))
 municipalities_total <-   
   filter(dsw, region.class == "KUNTA" & gender == "total")
 
@@ -66,4 +65,4 @@ dsw %<>%
 dsw <- filter(dsw, count_na != 0)
 
 
-save(dsw, file = here("data", "processed", "data_included.RData"))
+saveRDS(dsw, file = here("data", "processed", "data_included.rds"))

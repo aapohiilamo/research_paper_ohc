@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>xxx</title>
+<title>Figures for Increasing association between child poverty and out-of-home care</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -108,7 +108,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">xxx</h1>
+<h1 class="title">Figures for Increasing association between child poverty and out-of-home care</h1>
 </div>
 
 
@@ -129,9 +129,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </div>
 </section>
-<section id="selecting-sample" class="level2">
-<h2 class="anchored" data-anchor-id="selecting-sample">Selecting sample</h2>
-</section>
 <section id="how-has-social-assistance-use-in-families-developed-in-municipalities" class="level2">
 <h2 class="anchored" data-anchor-id="how-has-social-assistance-use-in-families-developed-in-municipalities">How has social assistance use in families developed in municipalities?</h2>
 <ul>
@@ -141,73 +138,74 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list=</span><span class="fu">ls</span>())</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"processed"</span>, <span class="st">"data_imputed_teens.RData"</span>))</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"processed"</span>, <span class="st">"data_imputed.RData"</span>))</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>municipalities_total <span class="ot">&lt;-</span>  </span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(dsw.d, region.class <span class="sc">==</span> <span class="st">"KUNTA"</span> <span class="sc">&amp;</span> gender <span class="sc">==</span> <span class="st">"total"</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>teens_maa <span class="ot">&lt;-</span> <span class="fu">filter</span>(teens, region.class <span class="sc">==</span> <span class="st">"MAA"</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>teens_kunta <span class="ot">&lt;-</span> <span class="fu">filter</span>(teens, region.class <span class="sc">==</span> <span class="st">"KUNTA"</span>)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>dsw.d <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"processed"</span>, <span class="st">"data_imputed.rds"</span>))</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>teens <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"processed"</span>, <span class="st">"data_imputed_teens.rds"</span>))</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>municipalities_total <span class="ot">&lt;-</span>  </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(dsw.d, region.class <span class="sc">==</span> <span class="st">"KUNTA"</span> <span class="sc">&amp;</span> gender <span class="sc">==</span> <span class="st">"total"</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>teens_maa <span class="ot">&lt;-</span> <span class="fu">filter</span>(teens, region.class <span class="sc">==</span> <span class="st">"MAA"</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>teens_kunta <span class="ot">&lt;-</span> <span class="fu">filter</span>(teens, region.class <span class="sc">==</span> <span class="st">"KUNTA"</span>)</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#by gender</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> <span class="fu">filter</span>(teens, region.class <span class="sc">==</span> <span class="st">"MAA"</span>),</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> year, <span class="at">y =</span> ohc_age)) <span class="sc">+</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_text</span>(<span class="at">data=</span>. <span class="sc">%&gt;%</span> </span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">group_by</span>(gender) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>              <span class="fu">arrange</span>(<span class="fu">desc</span>(year)) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>              <span class="fu">slice</span>(<span class="dv">1</span>, <span class="dv">2</span>), </span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">label=</span><span class="fu">round</span>(ohc_age, <span class="at">digits =</span> <span class="dv">0</span>)), </span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>            <span class="at">position=</span><span class="fu">position_nudge</span>(<span class="at">y =</span> <span class="fl">1.5</span>, <span class="at">x =</span> <span class="sc">-</span><span class="dv">1</span>), <span class="at">hjust=</span><span class="dv">0</span>, <span class="at">show.legend=</span><span class="cn">FALSE</span>) <span class="sc">+</span> </span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>   <span class="fu">geom_text</span>(<span class="at">data=</span>. <span class="sc">%&gt;%</span> </span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">group_by</span>(gender) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>              <span class="fu">arrange</span>(<span class="fu">desc</span>(year)) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>              <span class="fu">slice</span>(<span class="dv">1</span>, <span class="dv">3</span>), </span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">label=</span><span class="fu">round</span>(ohc_age, <span class="at">digits =</span> <span class="dv">0</span>)), </span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>            <span class="at">position=</span><span class="fu">position_nudge</span>(<span class="at">y =</span> <span class="fl">1.5</span>, <span class="at">x =</span> <span class="sc">-</span><span class="dv">1</span>), <span class="at">hjust=</span><span class="dv">0</span>, <span class="at">show.legend=</span><span class="cn">FALSE</span>) <span class="sc">+</span> </span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data=</span>. <span class="sc">%&gt;%</span> </span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">group_by</span>(gender) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>              <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="sc">-</span>year)) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>              <span class="fu">slice</span>(<span class="dv">1</span>), </span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">label=</span><span class="fu">round</span>(ohc_age, <span class="at">digits =</span> <span class="dv">0</span>)), </span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>            <span class="at">position=</span><span class="fu">position_nudge</span>(<span class="at">y =</span> <span class="fl">1.5</span>, <span class="at">x =</span> <span class="sc">-</span><span class="dv">1</span>), <span class="at">hjust=</span><span class="dv">0</span>, <span class="at">show.legend=</span><span class="cn">FALSE</span>)  <span class="sc">+</span>  </span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>     <span class="fu">geom_text</span>(<span class="at">data=</span>. <span class="sc">%&gt;%</span> </span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">group_by</span>(gender) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>              <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="sc">-</span>year)) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>              <span class="fu">slice</span>(<span class="dv">1</span>, <span class="dv">3</span>), </span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">label=</span><span class="fu">round</span>(ohc_age, <span class="at">digits =</span> <span class="dv">0</span>)), </span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>            <span class="at">position=</span><span class="fu">position_nudge</span>(<span class="at">y =</span> <span class="fl">1.5</span>, <span class="at">x =</span> <span class="sc">-</span><span class="dv">1</span>), <span class="at">hjust=</span><span class="dv">0</span>, <span class="at">show.legend=</span><span class="cn">FALSE</span>)  <span class="sc">+</span>  </span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>   <span class="fu">facet_grid</span>(<span class="at">cols =</span> <span class="fu">vars</span>(gender)) <span class="sc">+</span>   </span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>   <span class="fu">geom_point</span>(<span class="at">data=</span>. <span class="sc">%&gt;%</span> </span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">group_by</span>(gender) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>              <span class="fu">arrange</span>(<span class="fu">desc</span>(year)) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>              <span class="fu">slice</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span> </span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_point</span>(<span class="at">data=</span>. <span class="sc">%&gt;%</span> </span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">group_by</span>(gender) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>              <span class="fu">arrange</span>(<span class="fu">desc</span>(year)) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>              <span class="fu">slice</span>(<span class="dv">1</span>, <span class="dv">3</span>), <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span> </span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>   <span class="fu">geom_point</span>(<span class="at">data=</span>. <span class="sc">%&gt;%</span> </span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">group_by</span>(gender) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>              <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="sc">-</span>year)) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>              <span class="fu">slice</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_point</span>(<span class="at">data=</span>. <span class="sc">%&gt;%</span> </span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">group_by</span>(gender) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>              <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="sc">-</span>year)) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>              <span class="fu">slice</span>(<span class="dv">1</span>, <span class="dv">3</span>), <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data=</span>. <span class="sc">%&gt;%</span> </span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">group_by</span>(gender) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>              <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="sc">-</span>year)) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>              <span class="fu">slice</span>(<span class="dv">2</span>), </span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">label=</span><span class="fu">round</span>(ohc_age, <span class="at">digits =</span> <span class="dv">0</span>)), </span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>            <span class="at">position=</span><span class="fu">position_nudge</span>(<span class="at">y =</span> <span class="dv">0</span>, <span class="at">x =</span> <span class="sc">-</span><span class="fl">2.5</span>), <span class="at">hjust=</span><span class="dv">0</span>, <span class="at">show.legend=</span><span class="cn">FALSE</span>) <span class="sc">+</span>  </span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>     <span class="fu">geom_textline</span>( <span class="at">data =</span> <span class="fu">filter</span>(teens, region.class <span class="sc">==</span> <span class="st">"MAA"</span>),<span class="fu">aes</span>(</span>
-<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> year, <span class="at">y =</span> ohc_age, <span class="at">group =</span> age.group, <span class="at">label =</span> age.group  ),  <span class="at">size =</span> <span class="dv">4</span>,</span>
-<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>  <span class="at">linewidth =</span> <span class="dv">1</span>,</span>
-<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>  <span class="at">hjust =</span> <span class="fl">0.5</span></span>
-<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span> </span>
-<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>   <span class="fu">ylab</span>(<span class="st">"Out-of-home care per 1000 children"</span>) <span class="sc">+</span></span>
-<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">30</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">#by gender</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> <span class="fu">filter</span>(teens, region.class <span class="sc">==</span> <span class="st">"MAA"</span>),</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> year, <span class="at">y =</span> ohc_age)) <span class="sc">+</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_text</span>(<span class="at">data=</span>. <span class="sc">%&gt;%</span> </span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">group_by</span>(gender) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>              <span class="fu">arrange</span>(<span class="fu">desc</span>(year)) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>              <span class="fu">slice</span>(<span class="dv">1</span>, <span class="dv">2</span>), </span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">label=</span><span class="fu">round</span>(ohc_age, <span class="at">digits =</span> <span class="dv">0</span>)), </span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>            <span class="at">position=</span><span class="fu">position_nudge</span>(<span class="at">y =</span> <span class="fl">1.5</span>, <span class="at">x =</span> <span class="sc">-</span><span class="dv">1</span>), <span class="at">hjust=</span><span class="dv">0</span>, <span class="at">show.legend=</span><span class="cn">FALSE</span>) <span class="sc">+</span> </span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>   <span class="fu">geom_text</span>(<span class="at">data=</span>. <span class="sc">%&gt;%</span> </span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">group_by</span>(gender) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>              <span class="fu">arrange</span>(<span class="fu">desc</span>(year)) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>              <span class="fu">slice</span>(<span class="dv">1</span>, <span class="dv">3</span>), </span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">label=</span><span class="fu">round</span>(ohc_age, <span class="at">digits =</span> <span class="dv">0</span>)), </span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>            <span class="at">position=</span><span class="fu">position_nudge</span>(<span class="at">y =</span> <span class="fl">1.5</span>, <span class="at">x =</span> <span class="sc">-</span><span class="dv">1</span>), <span class="at">hjust=</span><span class="dv">0</span>, <span class="at">show.legend=</span><span class="cn">FALSE</span>) <span class="sc">+</span> </span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data=</span>. <span class="sc">%&gt;%</span> </span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">group_by</span>(gender) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>              <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="sc">-</span>year)) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>              <span class="fu">slice</span>(<span class="dv">1</span>), </span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">label=</span><span class="fu">round</span>(ohc_age, <span class="at">digits =</span> <span class="dv">0</span>)), </span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>            <span class="at">position=</span><span class="fu">position_nudge</span>(<span class="at">y =</span> <span class="fl">1.5</span>, <span class="at">x =</span> <span class="sc">-</span><span class="dv">1</span>), <span class="at">hjust=</span><span class="dv">0</span>, <span class="at">show.legend=</span><span class="cn">FALSE</span>)  <span class="sc">+</span>  </span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>     <span class="fu">geom_text</span>(<span class="at">data=</span>. <span class="sc">%&gt;%</span> </span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">group_by</span>(gender) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>              <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="sc">-</span>year)) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>              <span class="fu">slice</span>(<span class="dv">1</span>, <span class="dv">3</span>), </span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">label=</span><span class="fu">round</span>(ohc_age, <span class="at">digits =</span> <span class="dv">0</span>)), </span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>            <span class="at">position=</span><span class="fu">position_nudge</span>(<span class="at">y =</span> <span class="fl">1.5</span>, <span class="at">x =</span> <span class="sc">-</span><span class="dv">1</span>), <span class="at">hjust=</span><span class="dv">0</span>, <span class="at">show.legend=</span><span class="cn">FALSE</span>)  <span class="sc">+</span>  </span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>   <span class="fu">facet_grid</span>(<span class="at">cols =</span> <span class="fu">vars</span>(gender)) <span class="sc">+</span>   </span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>   <span class="fu">geom_point</span>(<span class="at">data=</span>. <span class="sc">%&gt;%</span> </span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">group_by</span>(gender) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>              <span class="fu">arrange</span>(<span class="fu">desc</span>(year)) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>              <span class="fu">slice</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span> </span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_point</span>(<span class="at">data=</span>. <span class="sc">%&gt;%</span> </span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">group_by</span>(gender) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>              <span class="fu">arrange</span>(<span class="fu">desc</span>(year)) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>              <span class="fu">slice</span>(<span class="dv">1</span>, <span class="dv">3</span>), <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span> </span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>   <span class="fu">geom_point</span>(<span class="at">data=</span>. <span class="sc">%&gt;%</span> </span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">group_by</span>(gender) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>              <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="sc">-</span>year)) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>              <span class="fu">slice</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_point</span>(<span class="at">data=</span>. <span class="sc">%&gt;%</span> </span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">group_by</span>(gender) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>              <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="sc">-</span>year)) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>              <span class="fu">slice</span>(<span class="dv">1</span>, <span class="dv">3</span>), <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data=</span>. <span class="sc">%&gt;%</span> </span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">group_by</span>(gender) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>              <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="sc">-</span>year)) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>              <span class="fu">slice</span>(<span class="dv">2</span>), </span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">label=</span><span class="fu">round</span>(ohc_age, <span class="at">digits =</span> <span class="dv">0</span>)), </span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>            <span class="at">position=</span><span class="fu">position_nudge</span>(<span class="at">y =</span> <span class="dv">0</span>, <span class="at">x =</span> <span class="sc">-</span><span class="fl">2.5</span>), <span class="at">hjust=</span><span class="dv">0</span>, <span class="at">show.legend=</span><span class="cn">FALSE</span>) <span class="sc">+</span>  </span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>     <span class="fu">geom_textline</span>( <span class="at">data =</span> <span class="fu">filter</span>(teens, region.class <span class="sc">==</span> <span class="st">"MAA"</span>),<span class="fu">aes</span>(</span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> year, <span class="at">y =</span> ohc_age, <span class="at">group =</span> age.group, <span class="at">label =</span> age.group  ),  <span class="at">size =</span> <span class="dv">4</span>,</span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>  <span class="at">linewidth =</span> <span class="dv">1</span>,</span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>  <span class="at">hjust =</span> <span class="fl">0.5</span></span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span> </span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>   <span class="fu">ylab</span>(<span class="st">"Out-of-home care per 1000 children"</span>) <span class="sc">+</span></span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">30</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="04_figures_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
@@ -300,19 +298,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">filter</span>(dsw.d, gender<span class="sc">==</span><span class="st">"total"</span> <span class="sc">&amp;</span> region.class <span class="sc">==</span> <span class="st">"KUNTA"</span> <span class="sc">&amp;</span> year <span class="sc">==</span> <span class="dv">2020</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(poverty, ohc, <span class="at">size=</span>total_chld_n))</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Add regression line</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.1</span>)  <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>) <span class="sc">+</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>   <span class="fu">xlab</span>(<span class="st">"Families receiving social assistance (%)"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Out-of-home care per 1000 children"</span>) <span class="sc">+</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  teema <span class="sc">+</span> <span class="fu">scale_size</span>(<span class="at">guide=</span><span class="st">"none"</span>) <span class="sc">+</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_repel</span>(<span class="at">data =</span> <span class="fu">filter</span>(data, childr_n<span class="sc">&gt;</span> <span class="dv">18000</span> <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Sipoo"</span> <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Lieksa"</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                                <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Kauniainen"</span> <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Lieto"</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>                                 <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Närpiö"</span>  <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Kemi"</span>), </span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">label =</span> region.name, <span class="at">size =</span> <span class="cn">NULL</span>, <span class="at">color =</span> <span class="cn">NULL</span>), <span class="at">nudge_y =</span> <span class="fl">1.75</span>, <span class="at">box.padding =</span> <span class="fl">0.5</span>, <span class="at">max.overlaps =</span> <span class="cn">Inf</span>) <span class="sc">+</span> </span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>   <span class="fu">geom_point</span>(<span class="at">data =</span> <span class="fu">filter</span>(data, childr_n<span class="sc">&gt;</span> <span class="dv">18000</span> <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Sipoo"</span> <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Lieksa"</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>                                <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Kauniainen"</span> <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Lieto"</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>                                 <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Närpiö"</span>  <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Kemi"</span>), <span class="at">color =</span> <span class="st">"grey50"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(poverty, ohc, <span class="at">size=</span>total_chld_n))</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Add regression line</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span>     <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.1</span>)  <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>) <span class="sc">+</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>   <span class="fu">xlab</span>(<span class="st">"Toimeentulotukea saavien perheiden osuus (%)"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Kodin ulkopuolella per 1000 lasta"</span>) <span class="sc">+</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a> teema <span class="sc">+</span> </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size</span>(<span class="at">guide=</span><span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_repel</span>(<span class="at">data =</span> <span class="fu">filter</span>(data, childr_n<span class="sc">&gt;</span> <span class="dv">18000</span> <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Sipoo"</span> <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Lieksa"</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>                                <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Kauniainen"</span> <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Lieto"</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>                                 <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Närpiö"</span>  <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Kemi"</span>), </span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">label =</span> region.name, <span class="at">size =</span> <span class="cn">NULL</span>, <span class="at">color =</span> <span class="cn">NULL</span>), <span class="at">nudge_y =</span> <span class="fl">1.75</span>, <span class="at">box.padding =</span> <span class="fl">0.5</span>, <span class="at">max.overlaps =</span> <span class="cn">Inf</span>) <span class="sc">+</span> </span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>   <span class="fu">geom_point</span>(<span class="at">data =</span> <span class="fu">filter</span>(data, childr_n<span class="sc">&gt;</span> <span class="dv">18000</span> <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Sipoo"</span> <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Lieksa"</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>                                <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Kauniainen"</span> <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Lieto"</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>                                 <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Närpiö"</span>  <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Kemi"</span>), <span class="at">color =</span> <span class="st">"grey50"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -322,47 +322,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </figure>
 </div>
 </div>
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(poverty, ohc, <span class="at">size=</span>total_chld_n))</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Add regression line</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span>     <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.1</span>)  <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>) <span class="sc">+</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>   <span class="fu">xlab</span>(<span class="st">"Toimeentulotukea saavien perheiden osuus (%)"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Kodin ulkopuolella per 1000 lasta"</span>) <span class="sc">+</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a> teema <span class="sc">+</span> </span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size</span>(<span class="at">guide=</span><span class="st">"none"</span>) <span class="sc">+</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_repel</span>(<span class="at">data =</span> <span class="fu">filter</span>(data, childr_n<span class="sc">&gt;</span> <span class="dv">18000</span> <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Sipoo"</span> <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Lieksa"</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>                                <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Kauniainen"</span> <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Lieto"</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>                                 <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Närpiö"</span>  <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Kemi"</span>), </span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">label =</span> region.name, <span class="at">size =</span> <span class="cn">NULL</span>, <span class="at">color =</span> <span class="cn">NULL</span>), <span class="at">nudge_y =</span> <span class="fl">1.75</span>, <span class="at">box.padding =</span> <span class="fl">0.5</span>, <span class="at">max.overlaps =</span> <span class="cn">Inf</span>) <span class="sc">+</span> </span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>   <span class="fu">geom_point</span>(<span class="at">data =</span> <span class="fu">filter</span>(data, childr_n<span class="sc">&gt;</span> <span class="dv">18000</span> <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Sipoo"</span> <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Lieksa"</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>                                <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Kauniainen"</span> <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Lieto"</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>                                 <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Närpiö"</span>  <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Kemi"</span>), <span class="at">color =</span> <span class="st">"grey50"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="04_figures_files/figure-html/scatter-3.png" class="img-fluid figure-img" width="672"></p>
-<p></p><figcaption class="figure-caption">The association between child poverty and out-of-home care placement rates in Finnish municipalities in 1992 - 2021</figcaption><p></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">filter</span>(dsw.d, gender<span class="sc">==</span><span class="st">"total"</span> <span class="sc">&amp;</span> region.class <span class="sc">==</span> <span class="st">"KUNTA"</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(poverty, ohc, <span class="at">size=</span>total_chld_n))</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Add regression line</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span>p <span class="sc">+</span>     <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.1</span>)  <span class="sc">+</span> </span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>) <span class="sc">+</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Toimeentulotukea saavien perheiden osuus (%)"</span>) <span class="sc">+</span> </span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Kodin ulkopuolella per 1000 lasta"</span>) <span class="sc">+</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  teema <span class="sc">+</span> </span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size</span>(<span class="at">guide=</span><span class="st">"none"</span>) <span class="sc">+</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_label</span>(<span class="at">data =</span> <span class="fu">filter</span>(data, region.name <span class="sc">==</span> <span class="st">"Kauniainen"</span> <span class="sc">|</span> region.name <span class="sc">==</span> <span class="st">"Vantaa"</span>), </span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">label =</span> region.name, <span class="at">size =</span> <span class="cn">NULL</span>, <span class="at">color =</span> <span class="cn">NULL</span>), <span class="at">nudge_y =</span> <span class="fl">0.75</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 </div>
 </section>
 <section id="association-between-social-assistance-use-and-out-of-home-care-in-larger-geographical-units-maakunta" class="level2">
@@ -370,15 +329,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">filter</span>(dsw.d, gender<span class="sc">==</span><span class="st">"total"</span> <span class="sc">&amp;</span> region.class <span class="sc">==</span> <span class="st">"MAAKUNTA"</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(poverty, ohc, <span class="at">size=</span>total_chld_n))</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Add regression line</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span>     <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.1</span>)  <span class="sc">+</span> </span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>) <span class="sc">+</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>year) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">"Families receiving social assistance (%)"</span>) <span class="sc">+</span> </span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Out-of-home care per 1000 children"</span>) <span class="sc">+</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  teema <span class="sc">+</span> </span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size</span>(<span class="at">guide=</span><span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">filter</span>(dsw.d, gender<span class="sc">==</span><span class="st">"total"</span> <span class="sc">&amp;</span> region.class <span class="sc">==</span> <span class="st">"MAAKUNTA"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(poverty, ohc, <span class="at">size=</span>total_chld_n))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Add regression line</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span>     <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.1</span>)  <span class="sc">+</span> </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>) <span class="sc">+</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>year) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">"Families receiving social assistance (%)"</span>) <span class="sc">+</span> </span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Out-of-home care per 1000 children"</span>) <span class="sc">+</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  teema <span class="sc">+</span> </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size</span>(<span class="at">guide=</span><span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">

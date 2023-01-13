@@ -24,6 +24,5 @@ source(here("scripts", "01_sample_selection.R"))
 source(here("scripts", "02_imputation_variable_coding.R"))
 source(here("scripts", "03_changes_ohc.R"))
 
-quarto_render(here("quarto", "04_figures.qmd"), execute_dir = here())
+quarto_render(here("quarto", "04_figures.qmd"), execute_dir = here(), quiet = TRUE)
 quarto_render(here("quarto", "05_regressions.qmd"), execute_dir = here())
-

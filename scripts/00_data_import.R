@@ -110,4 +110,4 @@ dsw %<>%
             .funs = ~case_when(ohc_n_zero == "0" ~ as.numeric(ohc_n_zero), 
                                TRUE ~ .))
 
-save(dsw, file = here("data", "raw", "data_full.RData"))
+saveRDS(dsw, file = here("data", "raw", "data_full.rds"))
