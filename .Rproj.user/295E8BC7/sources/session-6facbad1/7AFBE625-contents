@@ -26,4 +26,3 @@ source(here("scripts", "03_changes_ohc.R"))
 
 quarto_render(here("quarto", "04_figures.qmd"), execute_dir = here())
 quarto_render(here("quarto", "05_regressions.qmd"), execute_dir = here())
-

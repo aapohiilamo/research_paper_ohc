@@ -88,10 +88,12 @@ dsw %<>%  ungroup()  %>% mutate(
   year = as.integer(year) ) %>%
   mutate(               poverty = ( sa_n / famil_n ) * 100,
                         ohc = (ohc_n / childr0018_n) * 1000,
-                        childr0012_n = rowSums(.[20:32]),
-                        childr1317_n = rowSums(.[33:38]))    %>%
+                        childr0012_n = rowSums(across(childr0_n:childr12_n)),
+                        childr1317_n = rowSums(across(childr13_n:childr18_n)))    %>%
   mutate(   ohc0012 = ( ( ohc0006_n + ohc0712_n )  /  childr0012_n ) * 1000,
             ohc1317 = ( ohc1317_n / childr1317_n ) * 1000 )
+#childr0012_n = rowSums(.[20:32]),
+#    childr1317_n = rowSums(.[33:38]))  
 
 
 dsw.d <- dsw %>% 

@@ -97,23 +97,17 @@ dsw <-
          ohc_0024n = ends_with("3563") ) 
 
 #merging dataset with the zeros
-dsw <- merge(dsw,
-             municipalities_with_zeros,
-             by=c("region.name","year"), 
-             sort=T, 
-             all.y = T, 
-             all.x = T)
-
+#dsw <- merge(dsw,
+#             municipalities_with_zeros,
+#             by=c("region.name","year"), 
+#             sort=T, 
+#             all.y = T, 
+#             all.x = T)
+dsw <- dsw %>% full_join(municipalities_with_zeros)
 #recoding variables when there are no out-of-home cases in the municipality
 dsw %<>%  
-  ungroup()  %>% 
-  mutate(ohc_n = case_when(ohc_n_zero == "0" ~ as.numeric(ohc_n_zero), 
-                           TRUE ~ ohc_n),
-         ohc0006_n = case_when(ohc_n_zero == "0" ~ as.numeric(ohc_n_zero), 
-                               TRUE ~ ohc0006_n ),
-         ohc0712_n = case_when(ohc_n_zero == "0" ~ as.numeric(ohc_n_zero), 
-                               TRUE ~ ohc0712_n ),
-         ohc1317_n = case_when(ohc_n_zero == "0" ~ as.numeric(ohc_n_zero), 
-                               TRUE ~ ohc1317_n ))
+  mutate_at(vars(c('ohc_n', 'ohc0006_n', 'ohc0712_n', 'ohc1317_n')), 
+            .funs = ~case_when(ohc_n_zero == "0" ~ as.numeric(ohc_n_zero), 
+                               TRUE ~ .))
 
 save(dsw, file = here("data", "raw", "data_full.RData"))
