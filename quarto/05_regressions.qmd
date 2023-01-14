@@ -1,5 +1,5 @@
 ---
-title: "Increasing association between child poverty and out-of-home care - longitudinal ecological analysis of Finnish municipalities in 1992-2020"
+title: "Regressions - The increasing association between child poverty and out-of-home care - longitudinal ecological analysis of Finnish municipalities in 1992-2021"
 format: html
 editor: visual
 code-fold: true
