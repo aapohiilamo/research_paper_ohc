@@ -14,11 +14,11 @@ library(tidyverse) #
 library(modelsummary)
 library(estimatr)
 library(lme4)
-library(ggpubr)
+#library(ggpubr)
 library(here)
 
 #clearing memory
-rm(list=ls())
+#rm(list=ls())
 
 
 ```
@@ -48,10 +48,7 @@ rm(list=ls())
 dsw.d <- readRDS(here("data", "processed", "data_imputed.rds"))
 teens <- readRDS(here("data", "processed", "data_imputed_teens.rds"))
 
-
-model.data <- filter(dsw.d, region.class == "KUNTA" & gender == "total")
-
-#write.dta(model.data, "C:/Users/HIILAMO/Downloads/mydata.dta")
+#model.data <- filter(dsw.d, region.class == "KUNTA" & gender == "total")
 
 all.years <- filter(dsw.d, region.class == "KUNTA" & gender == "total")
 Years.1992.01 <- filter(all.years, year %in% (1992:2001))
@@ -66,8 +63,6 @@ datasets <- list(all.years,
 lmrobust <- function(dataset) {
   lm_robust(ohc ~ poverty + unemp + factor(year), clusters = region, data = dataset)
 }
-
-
 
 within <- function(dataset) {
   lm_robust(ohc ~ poverty + unemp + factor(year), clusters = region, data = dataset, fixed_effects = ~ region)
@@ -86,11 +81,6 @@ modelsummary(
   coef_omit = "factor*|Intercept|region*|unemp*", 
   notes = "Models include years as factor and unemployment rate")
 
-
-
-
-
-
 ```
 
 ## Regression models - female
@@ -99,9 +89,7 @@ modelsummary(
 #| warning: false 
 #| tbl-cap: "Association between child poverty and out-of-home care in Finnish municipalities. Linear models."
 
-model.data <- filter(dsw.d, region.class == "KUNTA" & gender == "female")
-
-#write.dta(model.data, "C:/Users/HIILAMO/Downloads/mydata.dta")
+#model.data <- filter(dsw.d, region.class == "KUNTA" & gender == "female")
 
 all.years <- filter(dsw.d, region.class == "KUNTA" & gender == "female")
 Years.1992.01 <- filter(all.years, year %in% (1992:2001))
@@ -112,8 +100,6 @@ datasets <- list(all.years,
           Years.2002.11,
           Years.2012.21)
 
-
-
 results1 <- purrr::map(datasets,lmrobust)
 results2 <- purrr::map(datasets,within)
 
@@ -126,10 +112,6 @@ modelsummary(
   coef_omit = "factor*|Intercept|region*|unemp*", 
   notes = "Models include years as factor and unemployment rate")
 
-
-
-
-
 ```
 
 ## Regression models - male
@@ -138,12 +120,7 @@ modelsummary(
 #| warning: false 
 #| tbl-cap: "Association between child poverty and out-of-home care in Finnish municipalities. Linear models."
 
-#| warning: false 
-#| tbl-cap: "Association between child poverty and out-of-home care in Finnish municipalities. Linear models."
-
-model.data <- filter(dsw.d, region.class == "KUNTA" & gender == "male")
-
-#write.dta(model.data, "C:/Users/HIILAMO/Downloads/mydata.dta")
+#model.data <- filter(dsw.d, region.class == "KUNTA" & gender == "male")
 
 all.years <- filter(dsw.d, region.class == "KUNTA" & gender == "male")
 Years.1992.01 <- filter(all.years, year %in% (1992:2001))
@@ -154,8 +131,6 @@ datasets <- list(all.years,
           Years.2002.11,
           Years.2012.21)
 
-
-
 results1 <- purrr::map(datasets,lmrobust)
 results2 <- purrr::map(datasets,within)
 
@@ -167,8 +142,6 @@ modelsummary(
   statistic = NULL,
   coef_omit = "factor*|Intercept|region*|unemp*", 
   notes = "Models include years as factor and unemployment rate")
-
-
 
 ```
 
@@ -181,7 +154,6 @@ teens_kunta <- filter(teens, region.class == "KUNTA")
 
 all.years <- filter(teens_kunta, region.class == "KUNTA" & gender == "total" & age.group == "Ages 0 - 12")
 all.years$ohc<- all.years$ohc_age
-#write.dta(model.data, "C:/Users/HIILAMO/Downloads/mydata.dta")
 
 Years.1992.01 <- filter(all.years, year %in% (1992:2001))
 Years.2002.11 <- filter(all.years, year %in% (2002:2011))
@@ -190,7 +162,6 @@ datasets <- list(all.years,
           Years.1992.01,
           Years.2002.11,
           Years.2012.21)
-
 
 results1 <- purrr::map(datasets,lmrobust)
 results2 <- purrr::map(datasets,within)
@@ -203,10 +174,6 @@ modelsummary(
   statistic = NULL,
   coef_omit = "factor*|Intercept|region*|unemp*", 
   notes = "Models include years as factor and unemployment rate")
-
-
-
-
 
 ```
 
@@ -227,7 +194,6 @@ datasets <- list(all.years,
           Years.1992.01,
           Years.2002.11,
           Years.2012.21)
-
 
 results1 <- purrr::map(datasets,lmrobust)
 results2 <- purrr::map(datasets,within)
@@ -251,7 +217,6 @@ modelsummary(
 #| warning: false 
 #| eval: true
 
-
 all.years <- filter(dsw.d, region.class == "MAAKUNTA" & gender == "total")
 Years.1992.01 <- filter(all.years, year %in% (1992:2001))
 Years.2002.11 <- filter(all.years, year %in% (2002:2011))
@@ -260,7 +225,6 @@ datasets <- list(all.years,
           Years.1992.01,
           Years.2002.11,
           Years.2012.21)
-
 
 results1 <- purrr::map(datasets,lmrobust)
 results2 <- purrr::map(datasets,within)
@@ -273,8 +237,6 @@ modelsummary(
   statistic = NULL,
   coef_omit = "factor*|Intercept|region*|unemp*", 
   notes = "Models include years as factor and unemployment rate")
-
-
 
 
 ```
