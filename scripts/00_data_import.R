@@ -4,6 +4,7 @@ library(magrittr)
 library(readxl)
 library(sjlabelled)
 
+# Data on municipalities with zero out-of-home care cases
 municipalities_with_zeros <- read_excel(here("data", "raw", "kunnat joissa ei sijoituksia 1992_2020_valmis.xlsx"))
 
 municipalities_with_zeros  %<>% 
@@ -15,10 +16,10 @@ municipalities_with_zeros  %<>%
          region.name = "Kunta") %>% 
   mutate(year = as.numeric(year))
 
-# 2 Loading data directly from sotkanet
+# Loading data directly from sotkanet - in two phases: total and sex specific figures
 
 #selecting variables 
-wanted_variables <- c(181, 1065, 423, 179, 5097)
+wanted_variables <- c(181, 1065, 423, 179)
 
 #importing datasets - first only control variables. These are downloaded separately because they are not sex specific.
 #note that absolute value is usually number of people/families. Primary value is usually percentage. Here we take the absolute number because they are more accurate.
@@ -34,9 +35,8 @@ dsw.controls <- GetDataSotkanet(indicators = wanted_variables,
   rename(total_chld_n = ends_with("1065"))
 
 
-
 #take the sex specific figures 
-wanted_variables <- c( 1065, 191, 5495, 5496, 5497, 1064, 7, 552:570, 3563, 1066)
+wanted_variables <- c( 1065, 191, 5495, 5496, 5497, 7, 552:570, 3563, 1066)
 
 #importing datasets 
 dsw.main <- GetDataSotkanet(indicators = wanted_variables, 
@@ -59,7 +59,6 @@ dsw <- merge(dsw.controls,
 #We then labeling the data - we take variable names and place them as variable labels 
 var.labels <- colnames(dsw) 
 dsw <- set_label(dsw, label = var.labels) 
-ls(dsw)
 
 #data wrangling - making more informative variable names 
 dsw <- 
@@ -104,10 +103,11 @@ dsw <-
 #             all.y = T, 
 #             all.x = T)
 dsw <- dsw %>% full_join(municipalities_with_zeros)
+
 #recoding variables when there are no out-of-home cases in the municipality
 dsw %<>%  
   mutate_at(vars(c('ohc_n', 'ohc0006_n', 'ohc0712_n', 'ohc1317_n')), 
             .funs = ~case_when(ohc_n_zero == "0" ~ as.numeric(ohc_n_zero), 
                                TRUE ~ .))
-
+# Saving data to rds format
 saveRDS(dsw, file = here("data", "raw", "data_full.rds"))
