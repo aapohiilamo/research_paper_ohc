@@ -1,4 +1,0 @@
-install.packages("rmarkdown")
-
-library(quarto)
-quarto_serve("lasu_koodi_markukselle.qmd")

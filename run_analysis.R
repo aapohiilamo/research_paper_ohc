@@ -1,8 +1,8 @@
 # Title: The increasing association between child poverty and children in out-of-home care - an ecological longitudinal analysis of Finnish municipalities in the period 1992-2021
 
-# Purpose : This 
+# Purpose : This is a replication code for the paper titled above.
 
-# Project number: #007
+# Project number: #001
 
 # Data file: 
 
@@ -10,7 +10,7 @@
 # Contact details: aapo.hiilamo at itla.fi
 
 # Date script created: 30.10.2022
-# Date script last modified: 31.12.2022
+# Date script last modified: 16.01.2022
 
 ################################################################################
 

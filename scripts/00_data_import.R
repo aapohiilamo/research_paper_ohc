@@ -96,12 +96,7 @@ dsw <-
          ohc_0024n = ends_with("3563") ) 
 
 #merging dataset with the zeros
-#dsw <- merge(dsw,
-#             municipalities_with_zeros,
-#             by=c("region.name","year"), 
-#             sort=T, 
-#             all.y = T, 
-#             all.x = T)
+
 dsw <- dsw %>% full_join(municipalities_with_zeros)
 
 #recoding variables when there are no out-of-home cases in the municipality

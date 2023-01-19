@@ -12,7 +12,6 @@ length(unique(municipalities_total$region))
 observations <-nrow(municipalities_total)
 cat("Number of observations before any deletations: ", nrow(municipalities_total),"\n")
 
-
 dsw <- filter(dsw,  year %in% (1992:2021))
 
 municipalities_total <-   
@@ -44,8 +43,7 @@ observations <- nrow(municipalities_total)
 cat("Number of municipalities in 1992- 2021 with more than 1000 children & no missing SA data: ", before_deletation_regions,"\n")
 cat("Number of observations in 1992- 2021 with more than 1000 children & no missing SA data: ", observations,"\n")
 
-
-#5.  How many after excluding if all years OHC is missing
+#How many after excluding if all years OHC is missing
 
 dsw %<>%                                    # Count NA by group
   group_by(region) %>%
@@ -63,6 +61,5 @@ cat("Number of observations in 1992- 2021 with more than 1000 children & no miss
 dsw %<>%   
   drop_na(year, region, childr_n,  sa_n)
 dsw <- filter(dsw, count_na != 0)
-
 
 saveRDS(dsw, file = here("data", "processed", "data_included.rds"))
