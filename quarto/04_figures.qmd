@@ -22,7 +22,6 @@ library(ggrepel)
 
 ```
 
-
 ## How has social assistance use in families developed in municipalities?
 
 -   How much increase from 1992 to 2021 in OHC in preteenagers
@@ -115,9 +114,7 @@ geom_text(data=. %>%
 country_total <-  
   filter(dsw.d, region.class == "MAA" & gender == "total")
 
-figure <- ggplot(data = country_total,aes(x = year, y = poverty )) 
-
-figure +
+ggplot(data = country_total,aes(x = year, y = poverty ))  +
   geom_line(aes(), size=1) +
   geom_text(data=. %>% 
               arrange(desc(year)) %>% 
@@ -167,9 +164,8 @@ teema <- theme(
     legend.key = element_blank())
 
 data <- filter(dsw.d, gender=="total" & region.class == "KUNTA")
-p <- ggplot(data, aes(poverty, ohc, size=total_chld_n))
-# Add regression line
-p +     geom_point(alpha = 0.1)  + 
+ggplot(data, aes(poverty, ohc, size=total_chld_n)) +
+  geom_point(alpha = 0.1)  + 
   geom_smooth(method = "lm") +
   facet_wrap(~year) + 
   xlab("Families receiving social assistance (%)") + 
@@ -180,10 +176,8 @@ p +     geom_point(alpha = 0.1)  +
 
 data <- filter(dsw.d, gender=="total" & region.class == "KUNTA" & year == 2020)
 
-
-p <- ggplot(data, aes(poverty, ohc, size=total_chld_n))
-# Add regression line
-p +     geom_point(alpha = 0.1)  + geom_smooth(method = "lm") +
+ggplot(data, aes(poverty, ohc, size=total_chld_n)) +
+  geom_point(alpha = 0.1)  + geom_smooth(method = "lm") +
    xlab("Toimeentulotukea saavien perheiden osuus (%)") + ylab("Kodin ulkopuolella per 1000 lasta") +
  teema + 
   scale_size(guide="none") +
@@ -199,7 +193,6 @@ p +     geom_point(alpha = 0.1)  + geom_smooth(method = "lm") +
 
 ```
 
-
 ## Association between social assistance use and out-of-home care in larger geographical units (maakunta)
 
 ```{r}
@@ -209,9 +202,8 @@ p +     geom_point(alpha = 0.1)  + geom_smooth(method = "lm") +
 
 
 data <- filter(dsw.d, gender=="total" & region.class == "MAAKUNTA")
-p <- ggplot(data, aes(poverty, ohc, size=total_chld_n))
-# Add regression line
-p +     geom_point(alpha = 0.1)  + 
+ggplot(data, aes(poverty, ohc, size=total_chld_n)) +     
+  geom_point(alpha = 0.1)  + 
   geom_smooth(method = "lm") +
   facet_wrap(~year) + xlab("Families receiving social assistance (%)") + 
   ylab("Out-of-home care per 1000 children") +
