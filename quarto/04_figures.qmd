@@ -17,7 +17,7 @@ library(ggplot2)
 library(geomtextpath)
 library(here)
 library(ggrepel)
-
+library(Hmisc)
 #clearing memory
 
 ```
@@ -40,68 +40,70 @@ teens_maa <- filter(teens, region.class == "MAA")
 teens_kunta <- filter(teens, region.class == "KUNTA")
 
 
-#by gender
-ggplot(data = filter(teens, region.class == "MAA"),
-       aes(
-    x = year, y = ohc_age)) +
-geom_text(data=. %>% 
-                 group_by(gender) %>% 
-              arrange(desc(year)) %>% 
-              slice(1, 2), 
-            aes(label=round(ohc_age, digits = 0)), 
-            position=position_nudge(y = 1.5, x = -1), hjust=0, show.legend=FALSE) + 
-   geom_text(data=. %>% 
-                 group_by(gender) %>% 
-              arrange(desc(year)) %>% 
-              slice(1, 3), 
-            aes(label=round(ohc_age, digits = 0)), 
-            position=position_nudge(y = 1.5, x = -1), hjust=0, show.legend=FALSE) + 
-  geom_text(data=. %>% 
-                 group_by(gender) %>% 
-              arrange(desc(-year)) %>% 
-              slice(1), 
-            aes(label=round(ohc_age, digits = 0)), 
-            position=position_nudge(y = 1.5, x = -1), hjust=0, show.legend=FALSE)  +  
-     geom_text(data=. %>% 
-                 group_by(gender) %>% 
-              arrange(desc(-year)) %>% 
-              slice(1, 3), 
-            aes(label=round(ohc_age, digits = 0)), 
-            position=position_nudge(y = 1.5, x = -1), hjust=0, show.legend=FALSE)  +  
-   facet_grid(cols = vars(gender)) +   
-   geom_point(data=. %>% 
-                 group_by(gender) %>% 
-              arrange(desc(year)) %>% 
-              slice(1, 2), size = 3) + 
-      geom_point(data=. %>% 
-                 group_by(gender) %>% 
-              arrange(desc(year)) %>% 
-              slice(1, 3), size = 3) + 
-   geom_point(data=. %>% 
-                 group_by(gender) %>% 
-              arrange(desc(-year)) %>% 
-              slice(1, 2), size = 3) +
-      geom_point(data=. %>% 
-                 group_by(gender) %>% 
-              arrange(desc(-year)) %>% 
-              slice(1, 3), size = 3) +
-  geom_text(data=. %>% 
-                 group_by(gender) %>% 
-              arrange(desc(-year)) %>% 
-              slice(2), 
-            aes(label=round(ohc_age, digits = 0)), 
-            position=position_nudge(y = 0, x = -2.5), hjust=0, show.legend=FALSE) +  
-     geom_textline( data = filter(teens, region.class == "MAA"),aes(
-    x = year, y = ohc_age, group = age.group, label = age.group  ),  size = 4,
-  linewidth = 1,
-  hjust = 0.5
-  ) + 
-   ylab("Out-of-home care per 1000 children") +
-  scale_y_continuous(limits=c(0,30))
+teens$ohc_age<-teens$ohc_age/100
+# Prepare data upfront
+teens_maa <- filter(teens, region.class == "MAA")
+teens_maa_grouped_desc <- teens_maa %>%
+  group_by(gender) %>% 
+  arrange(desc(year)) %>%
+  slice(1:3)
+
+teens_maa_grouped_asc <- teens_maa %>%
+  group_by(gender) %>% 
+  arrange(year) %>%
+  slice(1:3)
+library(ggrepel)
+
+# Now plot
+ggplot(data = teens_maa, aes(x = year, y = ohc_age)) +
+  geom_textline(aes(group = age.group, , label = age.group), size = 4,   linewidth = 1) +
+  facet_grid(cols = vars(gender)) +
+  geom_text_repel(data = teens_maa_grouped_desc,
+            aes(label = round(ohc_age, digits = 0)),
+            position = position_nudge(y = 1.5, x = 0), hjust = 0, show.legend = FALSE, direction="y") +
+  geom_point(data = teens_maa_grouped_desc, size = 3)  +
+  geom_text_repel(data = teens_maa_grouped_asc,
+            aes(label = round(ohc_age, digits = 0)),
+            position = position_nudge(y = 1, x = -2), hjust = 0, show.legend = FALSE, direction="y") +
+  geom_point(data = teens_maa_grouped_asc, size = 3) +
+  ylab("Out-of-home care per 1000 children")
+
+
 
 
 
 ```
+
+-   How much increase from 1992 to 2021 in OHC in preteenagers
+
+```{r}
+#| echo: true
+#| output: true
+
+dsw.d <- readRDS(here("data", "processed", "data_imputed.rds"))
+dsw.d$ohc<-dsw.d$ohc/100
+
+municipalities_total <-  
+  filter(dsw.d, region.class == "KUNTA")
+
+
+country_total <- dsw.d %>%
+  filter(region.class == "MAA")
+
+# Create the plot with the desired elements
+ggplot(data = country_total, aes(x = year, y = ohc)) +
+  geom_line(size = 2) +
+  geom_line(data = municipalities_total, aes(group = region), alpha = 0.2, size = 0.5) +
+    facet_grid(cols = vars(gender)) +
+  ylab("Out-of-home care per 1000 children")
+
+
+
+
+
+```
+
+## 
 
 ## Development of social assistance use in families with children in municipalities
 
@@ -140,6 +142,32 @@ ggplot(data = country_total,aes(x = year, y = poverty ))  +
                       aes(x = year, y = poverty, group = region), 
             alpha = 0.05, size = 1) + 
   ylab("Families receiving social assistance (%)") 
+
+
+
+
+
+# Subset the data for the desired region and gender
+country_total <- dsw.d %>%
+  filter(region.class == "MAA" & gender == "total")
+
+# Create the plot with the desired elements
+ggplot(data = country_total, aes(x = year, y = poverty)) +
+  geom_line(size = 1) +
+  geom_text(data = country_total %>% arrange(desc(year)) %>% slice(1),
+            aes(label = round(poverty, digits = 1)),
+            position = position_nudge(y = 2, x = -0.6),
+            hjust = 0,
+            show.legend = FALSE) +
+  geom_point(data = country_total %>% arrange(desc(year)) %>% slice(1), size = 3) +
+  geom_point(data = country_total %>% arrange(desc(-year)) %>% slice(1), size = 3) +
+  geom_text(data = country_total %>% arrange(desc(-year)) %>% slice(1),
+            aes(label = round(poverty, digits = 1)),
+            position = position_nudge(y = 2, x = -0.6),
+            hjust = 0,
+            show.legend = FALSE) +
+  geom_line(data = municipalities_total, aes(group = region), alpha = 0.05, size = 1) +
+  ylab("Families receiving social assistance (%)")
 
 ```
 
@@ -210,4 +238,83 @@ ggplot(data, aes(poverty, ohc, size=total_chld_n)) +
   teema + 
   scale_size(guide="none")
 
+```
+
+## Change score association
+
+```{r}
+#| label: scatter_change_Score
+#| fig-cap: The association between changes in ohc and poverty
+#| warning: false 
+
+
+data <- filter(dsw.d, gender=="total" & region.class == "KUNTA") 
+# Load the required libraries
+
+data<- data %>% 
+  group_by(region) %>% 
+  dplyr::mutate(change_ohc = as.numeric(ohc) - Lag(as.numeric(ohc),+1),
+                change_poverty = as.numeric(poverty) - Lag(as.numeric(poverty),+1)) %>% 
+  ungroup
+
+
+# Create a scatter plot of change scores
+ggplot(data, aes(x = change_poverty, y = change_ohc, size=total_chld_n)) +
+  geom_point(alpha = 0.2) +
+  labs(x = "Change in Poverty", y = "Change in OHC") +
+  ggtitle("Change Scores Scatter Plot") +
+  teema +
+  facet_wrap(~year) +
+    geom_smooth(method = "lm") +
+  theme(legend.position = "none")
+
+  
+
+
+
+
+```
+
+## At-risk-of-poverty rate and social assistance use rate
+
+```{r}
+#| label: scatter_poverty_social_assistance
+#| fig-cap: association between poverty and social assistance
+#| warning: false 
+
+
+data <- filter(dsw.d, gender=="total" & region.class == "KUNTA")
+ggplot(data, aes(poverty, low_income, size=total_chld_n)) +     
+  geom_point(alpha = 0.1)  + 
+  geom_smooth(method = "lm") +
+  facet_wrap(~year) + xlab("Families receiving social assistance (%)") + 
+  ylab("At-risk-of-poverty rate among children") +
+  teema + 
+  scale_size(guide="none")
+
+
+# Subset the data for the desired region and gender
+country_total_income <- dsw.d %>%
+  filter(region.class == "MAA" & gender == "total")
+
+municipalities_total <-  
+  filter(dsw.d, region.class == "KUNTA" & gender == "total")
+
+# Create the plot with the desired elements
+ggplot(data = country_total_income, aes(x = year, y = low_income)) +
+  geom_line(size = 1) +
+  geom_text(data = country_total_income %>% arrange(desc(year)) %>% slice(1),
+            aes(label = round(low_income, digits = 1)),
+            position = position_nudge(y = 2, x = -0.6),
+            hjust = 0,
+            show.legend = FALSE) +
+  geom_point(data = country_total_income %>% arrange(desc(year)) %>% slice(1), size = 3) +
+  geom_point(data = country_total_income %>% arrange(desc(-year)) %>% slice(1), size = 3) +
+  geom_text(data = country_total_income %>% arrange(desc(-year)) %>% slice(1),
+            aes(label = round(low_income, digits = 1)),
+            position = position_nudge(y = 2, x = -0.6),
+            hjust = 0,
+            show.legend = FALSE) +
+  geom_line(data = municipalities_total, aes(group = region), alpha = 0.05, size = 1) +
+  ylab("Families receiving social assistance (%)")
 ```

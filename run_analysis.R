@@ -10,7 +10,7 @@
 # Contact details: aapo.hiilamo at itla.fi
 
 # Date script created: 30.10.2022
-# Date script last modified: 16.01.2022
+# Date script last modified: 24.05.2022
 
 ################################################################################
 

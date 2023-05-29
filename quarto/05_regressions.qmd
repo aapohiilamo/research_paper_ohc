@@ -49,7 +49,6 @@ dsw.d <- readRDS(here("data", "processed", "data_imputed.rds"))
 teens <- readRDS(here("data", "processed", "data_imputed_teens.rds"))
 
 #model.data <- filter(dsw.d, region.class == "KUNTA" & gender == "total")
-
 all.years <- filter(dsw.d, region.class == "KUNTA" & gender == "total")
 Years.1992.01 <- filter(all.years, year %in% (1992:2001))
 Years.2002.11 <- filter(all.years, year %in% (2002:2011))
@@ -75,7 +74,50 @@ results2 <- purrr::map(datasets,within)
 results <-c(results1,results2)
 modelsummary(
   results, gof_map = c("nobs", "r.squared"),
-  fmt = 2,
+  fmt = 0,
+  estimate  = "{estimate} [{conf.low}, {conf.high}]",
+  statistic = NULL,
+  coef_omit = "factor*|Intercept|region*|unemp*", 
+  notes = "Models include years as factor and unemployment rate")
+
+```
+
+## Regression models - lagged variable
+
+```{r}
+#| warning: false 
+#| tbl-cap: "Association between child poverty and out-of-home care in Finnish municipalities. Linear models. The Frist three models are without municipality fixed effects. "
+library(Hmisc)
+
+all.years <- filter(dsw.d, region.class == "KUNTA" & gender == "total")
+
+data_lag <- all.years %>% 
+  group_by(region) %>% 
+  dplyr::mutate(poverty_lag = Lag(as.numeric(poverty),+1)) %>% 
+  ungroup
+
+#model.data <- filter(dsw.d, region.class == "KUNTA" & gender == "total")
+Years.1992.01 <- filter(data_lag, year %in% (1992:2001))
+Years.2002.11 <- filter(data_lag, year %in% (2002:2011))
+Years.2012.21 <- filter(data_lag, year %in% (2012:2021))
+
+datasets <- list(data_lag, 
+          Years.1992.01,
+          Years.2002.11,
+          Years.2012.21)
+
+
+within_lag <- function(dataset) {
+  lm_robust(ohc ~ poverty_lag + unemp + factor(year), clusters = region, data = dataset, fixed_effects = ~ region)
+
+}
+
+results2 <- purrr::map(datasets,within_lag)
+
+results <-c(results2)
+modelsummary(
+  results, gof_map = c("nobs", "r.squared"),
+  fmt = 0,
   estimate  = "{estimate} [{conf.low}, {conf.high}]",
   statistic = NULL,
   coef_omit = "factor*|Intercept|region*|unemp*", 
@@ -106,7 +148,7 @@ results2 <- purrr::map(datasets,within)
 results <-c(results1,results2)
 modelsummary(
   results, gof_map = c("nobs", "r.squared"),
-  fmt = 2,
+  fmt = 0,
   estimate  = "{estimate} [{conf.low}, {conf.high}]",
   statistic = NULL,
   coef_omit = "factor*|Intercept|region*|unemp*", 
@@ -137,7 +179,7 @@ results2 <- purrr::map(datasets,within)
 results <-c(results1,results2)
 modelsummary(
   results, gof_map = c("nobs", "r.squared"),
-  fmt = 2,
+  fmt = 0,
   estimate  = "{estimate} [{conf.low}, {conf.high}]",
   statistic = NULL,
   coef_omit = "factor*|Intercept|region*|unemp*", 
@@ -169,7 +211,7 @@ results2 <- purrr::map(datasets,within)
 results <-c(results1,results2)
 modelsummary(
   results, gof_map = c("nobs", "r.squared"),
-  fmt = 2,
+  fmt = 0,
   estimate  = "{estimate} [{conf.low}, {conf.high}]",
   statistic = NULL,
   coef_omit = "factor*|Intercept|region*|unemp*", 
@@ -201,7 +243,7 @@ results2 <- purrr::map(datasets,within)
 results <-c(results1,results2)
 modelsummary(
   results, gof_map = c("nobs", "r.squared"),
-  fmt = 2,
+  fmt = 0,
   estimate  = "{estimate} [{conf.low}, {conf.high}]",
   statistic = NULL,
   coef_omit = "factor*|Intercept|region*|unemp*", 
@@ -232,7 +274,7 @@ results2 <- purrr::map(datasets,within)
 results <-c(results1,results2)
 modelsummary(
   results, gof_map = c("nobs", "r.squared"),
-  fmt = 2,
+  fmt = 0,
   estimate  = "{estimate} [{conf.low}, {conf.high}]",
   statistic = NULL,
   coef_omit = "factor*|Intercept|region*|unemp*", 

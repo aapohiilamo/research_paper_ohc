@@ -148,37 +148,36 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>teens <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"processed"</span>, <span class="st">"data_imputed_teens.rds"</span>))</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#model.data &lt;- filter(dsw.d, region.class == "KUNTA" &amp; gender == "total")</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>all.years <span class="ot">&lt;-</span> <span class="fu">filter</span>(dsw.d, region.class <span class="sc">==</span> <span class="st">"KUNTA"</span> <span class="sc">&amp;</span> gender <span class="sc">==</span> <span class="st">"total"</span>)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>Years.<span class="fl">1992.01</span> <span class="ot">&lt;-</span> <span class="fu">filter</span>(all.years, year <span class="sc">%in%</span> (<span class="dv">1992</span><span class="sc">:</span><span class="dv">2001</span>))</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>Years.<span class="fl">2002.11</span> <span class="ot">&lt;-</span> <span class="fu">filter</span>(all.years, year <span class="sc">%in%</span> (<span class="dv">2002</span><span class="sc">:</span><span class="dv">2011</span>))</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>Years.<span class="fl">2012.21</span> <span class="ot">&lt;-</span> <span class="fu">filter</span>(all.years, year <span class="sc">%in%</span> (<span class="dv">2012</span><span class="sc">:</span><span class="dv">2021</span>))</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>datasets <span class="ot">&lt;-</span> <span class="fu">list</span>(all.years, </span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>          Years.<span class="fl">1992.01</span>,</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>          Years.<span class="fl">2002.11</span>,</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>          Years.<span class="fl">2012.21</span>)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>lmrobust <span class="ot">&lt;-</span> <span class="cf">function</span>(dataset) {</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm_robust</span>(ohc <span class="sc">~</span> poverty <span class="sc">+</span> unemp <span class="sc">+</span> <span class="fu">factor</span>(year), <span class="at">clusters =</span> region, <span class="at">data =</span> dataset)</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>within <span class="ot">&lt;-</span> <span class="cf">function</span>(dataset) {</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm_robust</span>(ohc <span class="sc">~</span> poverty <span class="sc">+</span> unemp <span class="sc">+</span> <span class="fu">factor</span>(year), <span class="at">clusters =</span> region, <span class="at">data =</span> dataset, <span class="at">fixed_effects =</span> <span class="sc">~</span> region)</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>results1 <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(datasets,lmrobust)</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>results2 <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(datasets,within)</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span><span class="fu">c</span>(results1,results2)</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  results, <span class="at">gof_map =</span> <span class="fu">c</span>(<span class="st">"nobs"</span>, <span class="st">"r.squared"</span>),</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">fmt =</span> <span class="dv">2</span>,</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimate  =</span> <span class="st">"{estimate} [{conf.low}, {conf.high}]"</span>,</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">statistic =</span> <span class="cn">NULL</span>,</span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">coef_omit =</span> <span class="st">"factor*|Intercept|region*|unemp*"</span>, </span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">notes =</span> <span class="st">"Models include years as factor and unemployment rate"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>all.years <span class="ot">&lt;-</span> <span class="fu">filter</span>(dsw.d, region.class <span class="sc">==</span> <span class="st">"KUNTA"</span> <span class="sc">&amp;</span> gender <span class="sc">==</span> <span class="st">"total"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>Years.<span class="fl">1992.01</span> <span class="ot">&lt;-</span> <span class="fu">filter</span>(all.years, year <span class="sc">%in%</span> (<span class="dv">1992</span><span class="sc">:</span><span class="dv">2001</span>))</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>Years.<span class="fl">2002.11</span> <span class="ot">&lt;-</span> <span class="fu">filter</span>(all.years, year <span class="sc">%in%</span> (<span class="dv">2002</span><span class="sc">:</span><span class="dv">2011</span>))</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>Years.<span class="fl">2012.21</span> <span class="ot">&lt;-</span> <span class="fu">filter</span>(all.years, year <span class="sc">%in%</span> (<span class="dv">2012</span><span class="sc">:</span><span class="dv">2021</span>))</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>datasets <span class="ot">&lt;-</span> <span class="fu">list</span>(all.years, </span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>          Years.<span class="fl">1992.01</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>          Years.<span class="fl">2002.11</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>          Years.<span class="fl">2012.21</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>lmrobust <span class="ot">&lt;-</span> <span class="cf">function</span>(dataset) {</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm_robust</span>(ohc <span class="sc">~</span> poverty <span class="sc">+</span> unemp <span class="sc">+</span> <span class="fu">factor</span>(year), <span class="at">clusters =</span> region, <span class="at">data =</span> dataset)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>within <span class="ot">&lt;-</span> <span class="cf">function</span>(dataset) {</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm_robust</span>(ohc <span class="sc">~</span> poverty <span class="sc">+</span> unemp <span class="sc">+</span> <span class="fu">factor</span>(year), <span class="at">clusters =</span> region, <span class="at">data =</span> dataset, <span class="at">fixed_effects =</span> <span class="sc">~</span> region)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>results1 <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(datasets,lmrobust)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>results2 <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(datasets,within)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span><span class="fu">c</span>(results1,results2)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  results, <span class="at">gof_map =</span> <span class="fu">c</span>(<span class="st">"nobs"</span>, <span class="st">"r.squared"</span>),</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">fmt =</span> <span class="dv">0</span>,</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimate  =</span> <span class="st">"{estimate} [{conf.low}, {conf.high}]"</span>,</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">statistic =</span> <span class="cn">NULL</span>,</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">coef_omit =</span> <span class="st">"factor*|Intercept|region*|unemp*"</span>, </span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">notes =</span> <span class="st">"Models include years as factor and unemployment rate"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 
@@ -199,14 +198,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <tbody>
   <tr>
    <td style="text-align:left;box-shadow: 0px 1px"> poverty </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> 0.58 [0.44, 0.72] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> 0.34 [0.21, 0.48] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> 0.61 [0.39, 0.84] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> 0.81 [0.60, 1.02] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> 0.14 [0.04, 0.24] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> 0.05 [−0.04, 0.13] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> −0.07 [−0.27, 0.14] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> −0.10 [−0.32, 0.12] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 58 [44, 72] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 34 [21, 48] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 61 [39, 84] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 82 [60, 103] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 15 [4, 25] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 5 [−4, 13] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> −7 [−28, 14] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> −8 [−30, 13] </td>
   </tr>
   <tr>
    <td style="text-align:left;"> Num.Obs. </td>
@@ -221,14 +220,97 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </tr>
   <tr>
    <td style="text-align:left;"> R2 </td>
-   <td style="text-align:center;"> 0.507 </td>
+   <td style="text-align:center;"> 0.509 </td>
    <td style="text-align:center;"> 0.220 </td>
    <td style="text-align:center;"> 0.385 </td>
-   <td style="text-align:center;"> 0.468 </td>
-   <td style="text-align:center;"> 0.795 </td>
+   <td style="text-align:center;"> 0.472 </td>
+   <td style="text-align:center;"> 0.796 </td>
    <td style="text-align:center;"> 0.860 </td>
    <td style="text-align:center;"> 0.862 </td>
+   <td style="text-align:center;"> 0.866 </td>
+  </tr>
+</tbody>
+<tfoot><tr><td style="padding: 0; " colspan="100%">
+<sup></sup> Models include years as factor and unemployment rate</td></tr></tfoot>
+</table>
+
+</div>
+</div>
+</section>
+<section id="regression-models---lagged-variable" class="level2">
+<h2 class="anchored" data-anchor-id="regression-models---lagged-variable">Regression models - lagged variable</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Hmisc)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>all.years <span class="ot">&lt;-</span> <span class="fu">filter</span>(dsw.d, region.class <span class="sc">==</span> <span class="st">"KUNTA"</span> <span class="sc">&amp;</span> gender <span class="sc">==</span> <span class="st">"total"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>data_lag <span class="ot">&lt;-</span> all.years <span class="sc">%&gt;%</span> </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(region) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">poverty_lag =</span> <span class="fu">Lag</span>(<span class="fu">as.numeric</span>(poverty),<span class="sc">+</span><span class="dv">1</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  ungroup</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">#model.data &lt;- filter(dsw.d, region.class == "KUNTA" &amp; gender == "total")</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>Years.<span class="fl">1992.01</span> <span class="ot">&lt;-</span> <span class="fu">filter</span>(data_lag, year <span class="sc">%in%</span> (<span class="dv">1992</span><span class="sc">:</span><span class="dv">2001</span>))</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>Years.<span class="fl">2002.11</span> <span class="ot">&lt;-</span> <span class="fu">filter</span>(data_lag, year <span class="sc">%in%</span> (<span class="dv">2002</span><span class="sc">:</span><span class="dv">2011</span>))</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>Years.<span class="fl">2012.21</span> <span class="ot">&lt;-</span> <span class="fu">filter</span>(data_lag, year <span class="sc">%in%</span> (<span class="dv">2012</span><span class="sc">:</span><span class="dv">2021</span>))</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>datasets <span class="ot">&lt;-</span> <span class="fu">list</span>(data_lag, </span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>          Years.<span class="fl">1992.01</span>,</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>          Years.<span class="fl">2002.11</span>,</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>          Years.<span class="fl">2012.21</span>)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>within_lag <span class="ot">&lt;-</span> <span class="cf">function</span>(dataset) {</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm_robust</span>(ohc <span class="sc">~</span> poverty_lag <span class="sc">+</span> unemp <span class="sc">+</span> <span class="fu">factor</span>(year), <span class="at">clusters =</span> region, <span class="at">data =</span> dataset, <span class="at">fixed_effects =</span> <span class="sc">~</span> region)</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>results2 <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(datasets,within_lag)</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span><span class="fu">c</span>(results2)</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>  results, <span class="at">gof_map =</span> <span class="fu">c</span>(<span class="st">"nobs"</span>, <span class="st">"r.squared"</span>),</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">fmt =</span> <span class="dv">0</span>,</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimate  =</span> <span class="st">"{estimate} [{conf.low}, {conf.high}]"</span>,</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">statistic =</span> <span class="cn">NULL</span>,</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">coef_omit =</span> <span class="st">"factor*|Intercept|region*|unemp*"</span>, </span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">notes =</span> <span class="st">"Models include years as factor and unemployment rate"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+
+<table style="NAborder-bottom: 0; width: auto !important; margin-left: auto; margin-right: auto;" class="table"><caption>Association between child poverty and out-of-home care in Finnish municipalities. Linear models. The Frist three models are without municipality fixed effects.</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:center;"> Model 1 </th>
+   <th style="text-align:center;"> Model 2 </th>
+   <th style="text-align:center;"> Model 3 </th>
+   <th style="text-align:center;"> Model 4 </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;box-shadow: 0px 1px"> poverty_lag </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 16 [6, 26] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 3 [−7, 13] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> −2 [−19, 15] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> −14 [−34, 7] </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Num.Obs. </td>
+   <td style="text-align:center;"> 5410 </td>
+   <td style="text-align:center;"> 1851 </td>
+   <td style="text-align:center;"> 1869 </td>
+   <td style="text-align:center;"> 1690 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> R2 </td>
+   <td style="text-align:center;"> 0.797 </td>
+   <td style="text-align:center;"> 0.872 </td>
    <td style="text-align:center;"> 0.861 </td>
+   <td style="text-align:center;"> 0.866 </td>
   </tr>
 </tbody>
 <tfoot><tr><td style="padding: 0; " colspan="100%">
@@ -243,95 +325,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#model.data &lt;- filter(dsw.d, region.class == "KUNTA" &amp; gender == "female")</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>all.years <span class="ot">&lt;-</span> <span class="fu">filter</span>(dsw.d, region.class <span class="sc">==</span> <span class="st">"KUNTA"</span> <span class="sc">&amp;</span> gender <span class="sc">==</span> <span class="st">"female"</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>Years.<span class="fl">1992.01</span> <span class="ot">&lt;-</span> <span class="fu">filter</span>(all.years, year <span class="sc">%in%</span> (<span class="dv">1992</span><span class="sc">:</span><span class="dv">2001</span>))</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>Years.<span class="fl">2002.11</span> <span class="ot">&lt;-</span> <span class="fu">filter</span>(all.years, year <span class="sc">%in%</span> (<span class="dv">2002</span><span class="sc">:</span><span class="dv">2011</span>))</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>Years.<span class="fl">2012.21</span> <span class="ot">&lt;-</span> <span class="fu">filter</span>(all.years, year <span class="sc">%in%</span> (<span class="dv">2012</span><span class="sc">:</span><span class="dv">2021</span>))</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>datasets <span class="ot">&lt;-</span> <span class="fu">list</span>(all.years, </span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>          Years.<span class="fl">1992.01</span>,</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>          Years.<span class="fl">2002.11</span>,</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>          Years.<span class="fl">2012.21</span>)</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>results1 <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(datasets,lmrobust)</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>results2 <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(datasets,within)</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span><span class="fu">c</span>(results1,results2)</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  results, <span class="at">gof_map =</span> <span class="fu">c</span>(<span class="st">"nobs"</span>, <span class="st">"r.squared"</span>),</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">fmt =</span> <span class="dv">2</span>,</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimate  =</span> <span class="st">"{estimate} [{conf.low}, {conf.high}]"</span>,</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">statistic =</span> <span class="cn">NULL</span>,</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">coef_omit =</span> <span class="st">"factor*|Intercept|region*|unemp*"</span>, </span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">notes =</span> <span class="st">"Models include years as factor and unemployment rate"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-
-<table style="NAborder-bottom: 0; width: auto !important; margin-left: auto; margin-right: auto;" class="table"><caption>Association between child poverty and out-of-home care in Finnish municipalities. Linear models.</caption>
- <thead>
-  <tr>
-   <th style="text-align:left;">   </th>
-   <th style="text-align:center;"> Model 1 </th>
-   <th style="text-align:center;"> Model 2 </th>
-   <th style="text-align:center;"> Model 3 </th>
-   <th style="text-align:center;"> Model 4 </th>
-   <th style="text-align:center;"> Model 5 </th>
-   <th style="text-align:center;"> Model 6 </th>
-   <th style="text-align:center;"> Model 7 </th>
-   <th style="text-align:center;"> Model 8 </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;box-shadow: 0px 1px"> poverty </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> 0.67 [0.51, 0.82] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> 0.39 [0.23, 0.55] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> 0.81 [0.56, 1.06] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> 0.83 [0.60, 1.07] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> 0.15 [0.03, 0.27] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> 0.06 [−0.07, 0.18] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> 0.02 [−0.26, 0.31] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> −0.07 [−0.35, 0.21] </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Num.Obs. </td>
-   <td style="text-align:center;"> 5626 </td>
-   <td style="text-align:center;"> 2063 </td>
-   <td style="text-align:center;"> 1871 </td>
-   <td style="text-align:center;"> 1692 </td>
-   <td style="text-align:center;"> 5626 </td>
-   <td style="text-align:center;"> 2063 </td>
-   <td style="text-align:center;"> 1871 </td>
-   <td style="text-align:center;"> 1692 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> R2 </td>
-   <td style="text-align:center;"> 0.446 </td>
-   <td style="text-align:center;"> 0.182 </td>
-   <td style="text-align:center;"> 0.354 </td>
-   <td style="text-align:center;"> 0.411 </td>
-   <td style="text-align:center;"> 0.748 </td>
-   <td style="text-align:center;"> 0.815 </td>
-   <td style="text-align:center;"> 0.807 </td>
-   <td style="text-align:center;"> 0.821 </td>
-  </tr>
-</tbody>
-<tfoot><tr><td style="padding: 0; " colspan="100%">
-<sup></sup> Models include years as factor and unemployment rate</td></tr></tfoot>
-</table>
-
-</div>
-</div>
-</section>
-<section id="regression-models---male" class="level2">
-<h2 class="anchored" data-anchor-id="regression-models---male">Regression models - male</h2>
-<div class="cell">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#model.data &lt;- filter(dsw.d, region.class == "KUNTA" &amp; gender == "male")</span></span>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#model.data &lt;- filter(dsw.d, region.class == "KUNTA" &amp; gender == "female")</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>all.years <span class="ot">&lt;-</span> <span class="fu">filter</span>(dsw.d, region.class <span class="sc">==</span> <span class="st">"KUNTA"</span> <span class="sc">&amp;</span> gender <span class="sc">==</span> <span class="st">"male"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>all.years <span class="ot">&lt;-</span> <span class="fu">filter</span>(dsw.d, region.class <span class="sc">==</span> <span class="st">"KUNTA"</span> <span class="sc">&amp;</span> gender <span class="sc">==</span> <span class="st">"female"</span>)</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>Years.<span class="fl">1992.01</span> <span class="ot">&lt;-</span> <span class="fu">filter</span>(all.years, year <span class="sc">%in%</span> (<span class="dv">1992</span><span class="sc">:</span><span class="dv">2001</span>))</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>Years.<span class="fl">2002.11</span> <span class="ot">&lt;-</span> <span class="fu">filter</span>(all.years, year <span class="sc">%in%</span> (<span class="dv">2002</span><span class="sc">:</span><span class="dv">2011</span>))</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>Years.<span class="fl">2012.21</span> <span class="ot">&lt;-</span> <span class="fu">filter</span>(all.years, year <span class="sc">%in%</span> (<span class="dv">2012</span><span class="sc">:</span><span class="dv">2021</span>))</span>
@@ -346,7 +342,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span><span class="fu">c</span>(results1,results2)</span>
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(</span>
 <span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  results, <span class="at">gof_map =</span> <span class="fu">c</span>(<span class="st">"nobs"</span>, <span class="st">"r.squared"</span>),</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">fmt =</span> <span class="dv">2</span>,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">fmt =</span> <span class="dv">0</span>,</span>
 <span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimate  =</span> <span class="st">"{estimate} [{conf.low}, {conf.high}]"</span>,</span>
 <span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">statistic =</span> <span class="cn">NULL</span>,</span>
 <span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">coef_omit =</span> <span class="st">"factor*|Intercept|region*|unemp*"</span>, </span>
@@ -371,14 +367,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <tbody>
   <tr>
    <td style="text-align:left;box-shadow: 0px 1px"> poverty </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> 0.54 [0.38, 0.69] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> 0.29 [0.17, 0.42] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> 0.48 [0.21, 0.75] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> 0.86 [0.63, 1.10] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> 0.12 [0.01, 0.23] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> 0.04 [−0.05, 0.13] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> −0.15 [−0.37, 0.07] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> −0.10 [−0.33, 0.13] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 67 [51, 82] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 39 [23, 55] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 81 [56, 106] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 84 [60, 107] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 15 [3, 27] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 5 [−7, 17] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 1 [−27, 30] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> −6 [−34, 23] </td>
   </tr>
   <tr>
    <td style="text-align:left;"> Num.Obs. </td>
@@ -393,14 +389,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </tr>
   <tr>
    <td style="text-align:left;"> R2 </td>
-   <td style="text-align:center;"> 0.432 </td>
-   <td style="text-align:center;"> 0.174 </td>
-   <td style="text-align:center;"> 0.292 </td>
+   <td style="text-align:center;"> 0.447 </td>
+   <td style="text-align:center;"> 0.181 </td>
+   <td style="text-align:center;"> 0.355 </td>
    <td style="text-align:center;"> 0.412 </td>
-   <td style="text-align:center;"> 0.740 </td>
-   <td style="text-align:center;"> 0.805 </td>
-   <td style="text-align:center;"> 0.821 </td>
-   <td style="text-align:center;"> 0.829 </td>
+   <td style="text-align:center;"> 0.749 </td>
+   <td style="text-align:center;"> 0.815 </td>
+   <td style="text-align:center;"> 0.808 </td>
+   <td style="text-align:center;"> 0.822 </td>
   </tr>
 </tbody>
 <tfoot><tr><td style="padding: 0; " colspan="100%">
@@ -410,35 +406,33 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="regression-models---preteenagers" class="level2">
-<h2 class="anchored" data-anchor-id="regression-models---preteenagers">Regression models - preteenagers</h2>
+<section id="regression-models---male" class="level2">
+<h2 class="anchored" data-anchor-id="regression-models---male">Regression models - male</h2>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>teens_kunta <span class="ot">&lt;-</span> <span class="fu">filter</span>(teens, region.class <span class="sc">==</span> <span class="st">"KUNTA"</span>)</span>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#model.data &lt;- filter(dsw.d, region.class == "KUNTA" &amp; gender == "male")</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>all.years <span class="ot">&lt;-</span> <span class="fu">filter</span>(teens_kunta, region.class <span class="sc">==</span> <span class="st">"KUNTA"</span> <span class="sc">&amp;</span> gender <span class="sc">==</span> <span class="st">"total"</span> <span class="sc">&amp;</span> age.group <span class="sc">==</span> <span class="st">"Ages 0 - 12"</span>)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>all.years<span class="sc">$</span>ohc<span class="ot">&lt;-</span> all.years<span class="sc">$</span>ohc_age</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>Years.<span class="fl">1992.01</span> <span class="ot">&lt;-</span> <span class="fu">filter</span>(all.years, year <span class="sc">%in%</span> (<span class="dv">1992</span><span class="sc">:</span><span class="dv">2001</span>))</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>Years.<span class="fl">2002.11</span> <span class="ot">&lt;-</span> <span class="fu">filter</span>(all.years, year <span class="sc">%in%</span> (<span class="dv">2002</span><span class="sc">:</span><span class="dv">2011</span>))</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>Years.<span class="fl">2012.21</span> <span class="ot">&lt;-</span> <span class="fu">filter</span>(all.years, year <span class="sc">%in%</span> (<span class="dv">2012</span><span class="sc">:</span><span class="dv">2021</span>))</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>datasets <span class="ot">&lt;-</span> <span class="fu">list</span>(all.years, </span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>          Years.<span class="fl">1992.01</span>,</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>          Years.<span class="fl">2002.11</span>,</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>          Years.<span class="fl">2012.21</span>)</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>results1 <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(datasets,lmrobust)</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>results2 <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(datasets,within)</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span><span class="fu">c</span>(results1,results2)</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  results, <span class="at">gof_map =</span> <span class="fu">c</span>(<span class="st">"nobs"</span>, <span class="st">"r.squared"</span>),</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">fmt =</span> <span class="dv">2</span>,</span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimate  =</span> <span class="st">"{estimate} [{conf.low}, {conf.high}]"</span>,</span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">statistic =</span> <span class="cn">NULL</span>,</span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">coef_omit =</span> <span class="st">"factor*|Intercept|region*|unemp*"</span>, </span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">notes =</span> <span class="st">"Models include years as factor and unemployment rate"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>all.years <span class="ot">&lt;-</span> <span class="fu">filter</span>(dsw.d, region.class <span class="sc">==</span> <span class="st">"KUNTA"</span> <span class="sc">&amp;</span> gender <span class="sc">==</span> <span class="st">"male"</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>Years.<span class="fl">1992.01</span> <span class="ot">&lt;-</span> <span class="fu">filter</span>(all.years, year <span class="sc">%in%</span> (<span class="dv">1992</span><span class="sc">:</span><span class="dv">2001</span>))</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>Years.<span class="fl">2002.11</span> <span class="ot">&lt;-</span> <span class="fu">filter</span>(all.years, year <span class="sc">%in%</span> (<span class="dv">2002</span><span class="sc">:</span><span class="dv">2011</span>))</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>Years.<span class="fl">2012.21</span> <span class="ot">&lt;-</span> <span class="fu">filter</span>(all.years, year <span class="sc">%in%</span> (<span class="dv">2012</span><span class="sc">:</span><span class="dv">2021</span>))</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>datasets <span class="ot">&lt;-</span> <span class="fu">list</span>(all.years, </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>          Years.<span class="fl">1992.01</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>          Years.<span class="fl">2002.11</span>,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>          Years.<span class="fl">2012.21</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>results1 <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(datasets,lmrobust)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>results2 <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(datasets,within)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span><span class="fu">c</span>(results1,results2)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  results, <span class="at">gof_map =</span> <span class="fu">c</span>(<span class="st">"nobs"</span>, <span class="st">"r.squared"</span>),</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">fmt =</span> <span class="dv">0</span>,</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimate  =</span> <span class="st">"{estimate} [{conf.low}, {conf.high}]"</span>,</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">statistic =</span> <span class="cn">NULL</span>,</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">coef_omit =</span> <span class="st">"factor*|Intercept|region*|unemp*"</span>, </span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">notes =</span> <span class="st">"Models include years as factor and unemployment rate"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 
@@ -459,14 +453,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <tbody>
   <tr>
    <td style="text-align:left;box-shadow: 0px 1px"> poverty </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> 0.47 [0.34, 0.59] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> 0.36 [0.21, 0.51] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> 0.52 [0.33, 0.71] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> 0.52 [0.35, 0.68] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> 0.15 [0.06, 0.25] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> 0.04 [−0.06, 0.13] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> 0.09 [−0.12, 0.30] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> 0.02 [−0.15, 0.19] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 54 [38, 69] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 29 [17, 42] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 48 [21, 75] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 87 [63, 110] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 12 [1, 23] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 4 [−5, 14] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> −15 [−37, 7] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> −7 [−30, 15] </td>
   </tr>
   <tr>
    <td style="text-align:left;"> Num.Obs. </td>
@@ -481,14 +475,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </tr>
   <tr>
    <td style="text-align:left;"> R2 </td>
-   <td style="text-align:center;"> 0.427 </td>
+   <td style="text-align:center;"> 0.434 </td>
    <td style="text-align:center;"> 0.174 </td>
-   <td style="text-align:center;"> 0.361 </td>
-   <td style="text-align:center;"> 0.358 </td>
-   <td style="text-align:center;"> 0.695 </td>
-   <td style="text-align:center;"> 0.794 </td>
-   <td style="text-align:center;"> 0.770 </td>
-   <td style="text-align:center;"> 0.783 </td>
+   <td style="text-align:center;"> 0.291 </td>
+   <td style="text-align:center;"> 0.416 </td>
+   <td style="text-align:center;"> 0.741 </td>
+   <td style="text-align:center;"> 0.805 </td>
+   <td style="text-align:center;"> 0.821 </td>
+   <td style="text-align:center;"> 0.833 </td>
   </tr>
 </tbody>
 <tfoot><tr><td style="padding: 0; " colspan="100%">
@@ -498,15 +492,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="regression-models---teenagers" class="level2">
-<h2 class="anchored" data-anchor-id="regression-models---teenagers">Regression models - teenagers</h2>
+<section id="regression-models---preteenagers" class="level2">
+<h2 class="anchored" data-anchor-id="regression-models---preteenagers">Regression models - preteenagers</h2>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>all.years <span class="ot">&lt;-</span> <span class="fu">filter</span>(teens_kunta, region.class <span class="sc">==</span> <span class="st">"KUNTA"</span> <span class="sc">&amp;</span> gender <span class="sc">==</span> <span class="st">"total"</span> <span class="sc">&amp;</span> age.group <span class="sc">==</span> <span class="st">"Ages 13 - 17"</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>all.years<span class="sc">$</span>ohc<span class="ot">&lt;-</span> all.years<span class="sc">$</span>ohc_age</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#write.dta(model.data, "C:/Users/HIILAMO/Downloads/mydata.dta")</span></span>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>teens_kunta <span class="ot">&lt;-</span> <span class="fu">filter</span>(teens, region.class <span class="sc">==</span> <span class="st">"KUNTA"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>all.years <span class="ot">&lt;-</span> <span class="fu">filter</span>(teens_kunta, region.class <span class="sc">==</span> <span class="st">"KUNTA"</span> <span class="sc">&amp;</span> gender <span class="sc">==</span> <span class="st">"total"</span> <span class="sc">&amp;</span> age.group <span class="sc">==</span> <span class="st">"Ages 0 - 12"</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>all.years<span class="sc">$</span>ohc<span class="ot">&lt;-</span> all.years<span class="sc">$</span>ohc_age</span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>Years.<span class="fl">1992.01</span> <span class="ot">&lt;-</span> <span class="fu">filter</span>(all.years, year <span class="sc">%in%</span> (<span class="dv">1992</span><span class="sc">:</span><span class="dv">2001</span>))</span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>Years.<span class="fl">2002.11</span> <span class="ot">&lt;-</span> <span class="fu">filter</span>(all.years, year <span class="sc">%in%</span> (<span class="dv">2002</span><span class="sc">:</span><span class="dv">2011</span>))</span>
@@ -522,7 +516,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span><span class="fu">c</span>(results1,results2)</span>
 <span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(</span>
 <span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  results, <span class="at">gof_map =</span> <span class="fu">c</span>(<span class="st">"nobs"</span>, <span class="st">"r.squared"</span>),</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">fmt =</span> <span class="dv">2</span>,</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">fmt =</span> <span class="dv">0</span>,</span>
 <span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimate  =</span> <span class="st">"{estimate} [{conf.low}, {conf.high}]"</span>,</span>
 <span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">statistic =</span> <span class="cn">NULL</span>,</span>
 <span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">coef_omit =</span> <span class="st">"factor*|Intercept|region*|unemp*"</span>, </span>
@@ -547,14 +541,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <tbody>
   <tr>
    <td style="text-align:left;box-shadow: 0px 1px"> poverty </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> 0.75 [0.54, 0.96] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> 0.38 [0.23, 0.53] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> 0.72 [0.39, 1.05] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> 1.18 [0.80, 1.56] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> 0.09 [−0.10, 0.27] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> 0.02 [−0.12, 0.15] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> −0.27 [−0.65, 0.10] </td>
-   <td style="text-align:center;box-shadow: 0px 1px"> −0.34 [−0.77, 0.10] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 47 [35, 59] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 36 [21, 51] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 52 [33, 71] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 52 [35, 69] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 16 [6, 26] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 4 [−6, 13] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 9 [−12, 30] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 3 [−13, 20] </td>
   </tr>
   <tr>
    <td style="text-align:left;"> Num.Obs. </td>
@@ -569,14 +563,102 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </tr>
   <tr>
    <td style="text-align:left;"> R2 </td>
-   <td style="text-align:center;"> 0.509 </td>
-   <td style="text-align:center;"> 0.203 </td>
+   <td style="text-align:center;"> 0.429 </td>
+   <td style="text-align:center;"> 0.174 </td>
+   <td style="text-align:center;"> 0.361 </td>
+   <td style="text-align:center;"> 0.362 </td>
+   <td style="text-align:center;"> 0.697 </td>
+   <td style="text-align:center;"> 0.795 </td>
+   <td style="text-align:center;"> 0.770 </td>
+   <td style="text-align:center;"> 0.788 </td>
+  </tr>
+</tbody>
+<tfoot><tr><td style="padding: 0; " colspan="100%">
+<sup></sup> Models include years as factor and unemployment rate</td></tr></tfoot>
+</table>
+
+</div>
+</div>
+</section>
+<section id="regression-models---teenagers" class="level2">
+<h2 class="anchored" data-anchor-id="regression-models---teenagers">Regression models - teenagers</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>all.years <span class="ot">&lt;-</span> <span class="fu">filter</span>(teens_kunta, region.class <span class="sc">==</span> <span class="st">"KUNTA"</span> <span class="sc">&amp;</span> gender <span class="sc">==</span> <span class="st">"total"</span> <span class="sc">&amp;</span> age.group <span class="sc">==</span> <span class="st">"Ages 13 - 17"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>all.years<span class="sc">$</span>ohc<span class="ot">&lt;-</span> all.years<span class="sc">$</span>ohc_age</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#write.dta(model.data, "C:/Users/HIILAMO/Downloads/mydata.dta")</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>Years.<span class="fl">1992.01</span> <span class="ot">&lt;-</span> <span class="fu">filter</span>(all.years, year <span class="sc">%in%</span> (<span class="dv">1992</span><span class="sc">:</span><span class="dv">2001</span>))</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>Years.<span class="fl">2002.11</span> <span class="ot">&lt;-</span> <span class="fu">filter</span>(all.years, year <span class="sc">%in%</span> (<span class="dv">2002</span><span class="sc">:</span><span class="dv">2011</span>))</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>Years.<span class="fl">2012.21</span> <span class="ot">&lt;-</span> <span class="fu">filter</span>(all.years, year <span class="sc">%in%</span> (<span class="dv">2012</span><span class="sc">:</span><span class="dv">2021</span>))</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>datasets <span class="ot">&lt;-</span> <span class="fu">list</span>(all.years, </span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>          Years.<span class="fl">1992.01</span>,</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>          Years.<span class="fl">2002.11</span>,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>          Years.<span class="fl">2012.21</span>)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>results1 <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(datasets,lmrobust)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>results2 <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(datasets,within)</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span><span class="fu">c</span>(results1,results2)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  results, <span class="at">gof_map =</span> <span class="fu">c</span>(<span class="st">"nobs"</span>, <span class="st">"r.squared"</span>),</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">fmt =</span> <span class="dv">0</span>,</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimate  =</span> <span class="st">"{estimate} [{conf.low}, {conf.high}]"</span>,</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">statistic =</span> <span class="cn">NULL</span>,</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">coef_omit =</span> <span class="st">"factor*|Intercept|region*|unemp*"</span>, </span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">notes =</span> <span class="st">"Models include years as factor and unemployment rate"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+
+<table style="NAborder-bottom: 0; width: auto !important; margin-left: auto; margin-right: auto;" class="table"><caption>Association between child poverty and out-of-home care in Finnish municipalities. Linear models.</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:center;"> Model 1 </th>
+   <th style="text-align:center;"> Model 2 </th>
+   <th style="text-align:center;"> Model 3 </th>
+   <th style="text-align:center;"> Model 4 </th>
+   <th style="text-align:center;"> Model 5 </th>
+   <th style="text-align:center;"> Model 6 </th>
+   <th style="text-align:center;"> Model 7 </th>
+   <th style="text-align:center;"> Model 8 </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;box-shadow: 0px 1px"> poverty </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 75 [55, 96] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 38 [23, 53] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 72 [39, 105] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 119 [81, 157] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 9 [−9, 28] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> 1 [−12, 15] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> −27 [−65, 10] </td>
+   <td style="text-align:center;box-shadow: 0px 1px"> −31 [−74, 12] </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Num.Obs. </td>
+   <td style="text-align:center;"> 5626 </td>
+   <td style="text-align:center;"> 2063 </td>
+   <td style="text-align:center;"> 1871 </td>
+   <td style="text-align:center;"> 1692 </td>
+   <td style="text-align:center;"> 5626 </td>
+   <td style="text-align:center;"> 2063 </td>
+   <td style="text-align:center;"> 1871 </td>
+   <td style="text-align:center;"> 1692 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> R2 </td>
+   <td style="text-align:center;"> 0.510 </td>
+   <td style="text-align:center;"> 0.202 </td>
    <td style="text-align:center;"> 0.296 </td>
-   <td style="text-align:center;"> 0.380 </td>
-   <td style="text-align:center;"> 0.735 </td>
+   <td style="text-align:center;"> 0.382 </td>
+   <td style="text-align:center;"> 0.736 </td>
    <td style="text-align:center;"> 0.775 </td>
-   <td style="text-align:center;"> 0.781 </td>
-   <td style="text-align:center;"> 0.790 </td>
+   <td style="text-align:center;"> 0.780 </td>
+   <td style="text-align:center;"> 0.792 </td>
   </tr>
 </tbody>
 <tfoot><tr><td style="padding: 0; " colspan="100%">
@@ -591,26 +673,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>all.years <span class="ot">&lt;-</span> <span class="fu">filter</span>(dsw.d, region.class <span class="sc">==</span> <span class="st">"MAAKUNTA"</span> <span class="sc">&amp;</span> gender <span class="sc">==</span> <span class="st">"total"</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>Years.<span class="fl">1992.01</span> <span class="ot">&lt;-</span> <span class="fu">filter</span>(all.years, year <span class="sc">%in%</span> (<span class="dv">1992</span><span class="sc">:</span><span class="dv">2001</span>))</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>Years.<span class="fl">2002.11</span> <span class="ot">&lt;-</span> <span class="fu">filter</span>(all.years, year <span class="sc">%in%</span> (<span class="dv">2002</span><span class="sc">:</span><span class="dv">2011</span>))</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>Years.<span class="fl">2012.21</span> <span class="ot">&lt;-</span> <span class="fu">filter</span>(all.years, year <span class="sc">%in%</span> (<span class="dv">2012</span><span class="sc">:</span><span class="dv">2021</span>))</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>datasets <span class="ot">&lt;-</span> <span class="fu">list</span>(all.years, </span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>          Years.<span class="fl">1992.01</span>,</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>          Years.<span class="fl">2002.11</span>,</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>          Years.<span class="fl">2012.21</span>)</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>results1 <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(datasets,lmrobust)</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>results2 <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(datasets,within)</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span><span class="fu">c</span>(results1,results2)</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  results, <span class="at">gof_map =</span> <span class="fu">c</span>(<span class="st">"nobs"</span>, <span class="st">"r.squared"</span>),</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">fmt =</span> <span class="dv">2</span>,</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimate  =</span> <span class="st">"{estimate} [{conf.low}, {conf.high}]"</span>,</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">statistic =</span> <span class="cn">NULL</span>,</span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">coef_omit =</span> <span class="st">"factor*|Intercept|region*|unemp*"</span>, </span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">notes =</span> <span class="st">"Models include years as factor and unemployment rate"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>all.years <span class="ot">&lt;-</span> <span class="fu">filter</span>(dsw.d, region.class <span class="sc">==</span> <span class="st">"MAAKUNTA"</span> <span class="sc">&amp;</span> gender <span class="sc">==</span> <span class="st">"total"</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>Years.<span class="fl">1992.01</span> <span class="ot">&lt;-</span> <span class="fu">filter</span>(all.years, year <span class="sc">%in%</span> (<span class="dv">1992</span><span class="sc">:</span><span class="dv">2001</span>))</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>Years.<span class="fl">2002.11</span> <span class="ot">&lt;-</span> <span class="fu">filter</span>(all.years, year <span class="sc">%in%</span> (<span class="dv">2002</span><span class="sc">:</span><span class="dv">2011</span>))</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>Years.<span class="fl">2012.21</span> <span class="ot">&lt;-</span> <span class="fu">filter</span>(all.years, year <span class="sc">%in%</span> (<span class="dv">2012</span><span class="sc">:</span><span class="dv">2021</span>))</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>datasets <span class="ot">&lt;-</span> <span class="fu">list</span>(all.years, </span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>          Years.<span class="fl">1992.01</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>          Years.<span class="fl">2002.11</span>,</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>          Years.<span class="fl">2012.21</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>results1 <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(datasets,lmrobust)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>results2 <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(datasets,within)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span><span class="fu">c</span>(results1,results2)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  results, <span class="at">gof_map =</span> <span class="fu">c</span>(<span class="st">"nobs"</span>, <span class="st">"r.squared"</span>),</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">fmt =</span> <span class="dv">0</span>,</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimate  =</span> <span class="st">"{estimate} [{conf.low}, {conf.high}]"</span>,</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">statistic =</span> <span class="cn">NULL</span>,</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">coef_omit =</span> <span class="st">"factor*|Intercept|region*|unemp*"</span>, </span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">notes =</span> <span class="st">"Models include years as factor and unemployment rate"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 
@@ -651,28 +733,28 @@ Model 8
 poverty
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-0.62 [0.13, 1.11]
+62 [13, 111]
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-0.45 [−0.10, 1.00]
+45 [−10, 100]
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-0.68 [−0.28, 1.64]
+68 [−28, 165]
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-0.76 [0.18, 1.34]
+75 [18, 132]
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-0.13 [−0.23, 0.48]
+13 [−22, 48]
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-0.31 [0.05, 0.57]
+31 [5, 57]
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-−0.06 [−0.56, 0.44]
+−6 [−56, 45]
 </td>
 <td style="text-align:center;box-shadow: 0px 1px">
-−0.06 [−0.58, 0.46]
+−5 [−57, 47]
 </td>
 </tr>
 <tr>
@@ -718,7 +800,7 @@ R2
 0.457
 </td>
 <td style="text-align:center;">
-0.522
+0.524
 </td>
 <td style="text-align:center;">
 0.889
